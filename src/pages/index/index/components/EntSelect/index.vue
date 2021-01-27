@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-27 16:06:01
+ * @Last Modified time: 2021-01-27 16:34:37
  */
 <template>
   <div class="ent-select">
@@ -68,6 +68,7 @@
 </template>
 <script lang="ts">
 import { onMounted, reactive, ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
 export default {
   name: 'EntSelect',
@@ -78,6 +79,8 @@ export default {
     },
   },
   setup(props, context) {
+    const router = useRouter();
+    const route = useRoute();
     const entList: Partial<EntItem>[] = reactive([
       {
         id: '1',
@@ -94,6 +97,8 @@ export default {
     const pageSize = 10;
     const pageNum = ref(1);
     const total = ref(32);
+
+    console.log(context, route, 2333);
 
     onMounted(() => {
       console.log(selectEnt);
@@ -132,6 +137,7 @@ export default {
       }
       console.log(selectEnt, 23333);
     };
+    console.log(router);
 
     const handleChangePage = (page) => {
       console.log(page);
