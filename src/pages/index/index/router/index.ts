@@ -7,6 +7,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Index',
     component: Index,
   },
+  {
+    path: '/resources-list',
+    name: 'ResourcesList',
+    component: () => import('../views/Resources/index.vue'),
+  },
 ];
 
 const router = createRouter({
