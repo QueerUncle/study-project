@@ -23,8 +23,8 @@ import EntSelect from '../components/EntSelect/index.vue';
 })
 export default class Home extends Vue {
   private entDialog = {
-    singleSelect: false,
-    visible: true,
+    singleSelect: true,
+    visible: false,
   };
 
   private handleOpenModal(): void {

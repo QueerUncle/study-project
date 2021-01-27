@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-27 16:55:58
+ * @Last Modified time: 2021-01-27 17:19:58
  */
 <template>
   <div class="ent-select">
@@ -15,7 +15,7 @@
     >
       <el-table
         :data="entList"
-        border
+        height="300px"
       >
         <el-table-column
           width="60"
@@ -45,15 +45,19 @@
           label="企业名称"
         ></el-table-column>
       </el-table>
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :page-size="pageSize"
-        :current-page="pageNum"
-        :pager-count="5"
-        :total="total"
-        @current-change="handleChangePage"
-      ></el-pagination>
+      <section class="page-info">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :page-size="pageSize"
+          :current-page="pageNum"
+          :pager-count="5"
+          :total="total"
+          hide-on-single-page
+          @current-change="handleChangePage"
+        ></el-pagination>
+      </section>
+
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleCloseModal(false)">取 消</el-button>
@@ -69,6 +73,7 @@
 <script lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { Http as request } from '@/assets/http/index';
+import { ElMessage } from 'element-plus';
 import api from '../../utils/api';
 
 export default {
@@ -80,26 +85,43 @@ export default {
     },
   },
   setup(props, context) {
-    const entList: Partial<EntItem>[] = reactive([
-      {
-        id: '1',
-        name: '大企业',
-        selected: false,
-      },
-      {
-        id: '2',
-        name: '小企业',
-        selected: false,
-      },
-    ]); // 企业列表
+    const entList = ref([]); // 企业列表
     let selectEnt: Partial<EntItem>[] = reactive([]); // 选中的企业列表
     const pageSize = 10;
     const pageNum = ref(1);
-    const total = ref(32);
+    const total = ref(0);
 
-    onMounted(() => {
-      console.log(selectEnt);
-    });
+    const getEntList = async () => {
+      const reqBody = {
+        pageNum: pageNum.value,
+        pageSize,
+      };
+      try {
+        // eslint-disable-next-line
+        // @ts-ignore
+        const { code, data, message } = await request.post(
+          api.getEntList,
+          reqBody,
+        );
+        if (code !== 200) {
+          ElMessage.error(message);
+          return;
+        }
+        const { list, page } = data;
+        for (let i = 0; i < list.length; i += 1) {
+          if (selectEnt.findIndex((item) => item.id === list[i].id) !== -1) {
+            list[i].selected = true;
+          } else {
+            list[i].selected = false;
+          }
+        }
+        total.value = page.total;
+        pageNum.value = page.pageNum;
+        entList.value = list;
+      } catch (error) {
+        ElMessage.error(error);
+      }
+    };
 
     const handleCloseModal = (flag: boolean): void => {
       /* eslint-disable */
@@ -119,9 +141,9 @@ export default {
       if (singleSelect) {
         selectEnt.length = 0;
         selectEnt.push(data);
-        for (let i = 0; i < entList.length; i += 1) {
-          if (entList[i].id !== data.id) {
-            entList[i].selected = false;
+        for (let i = 0; i < entList.value.length; i += 1) {
+          if (entList.value[i].id !== data.id) {
+            entList.value[i].selected = false;
           }
         }
       } else {
@@ -138,25 +160,14 @@ export default {
     const handleChangePage = (page) => {
       console.log(page);
       pageNum.value = page;
+      getEntList();
     };
 
-    const getEntList = async () => {
-      const reqBody = {
-        pageNum,
-        pageSize,
-      };
-      try {
-        // eslint-disable-next-line
-        // @ts-ignore
-        const { code, data, message } = await request.post(
-          api.getEntList,
-          reqBody,
-        );
-        console.log(code, data, message);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    onMounted(async () => {
+      console.log(selectEnt);
+      await getEntList();
+      console.log(entList, 232323);
+    });
 
     return {
       entList,
@@ -178,5 +189,10 @@ export default {
   .el-radio__label {
     display: none !important;
   }
+}
+.page-info {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 </style>
