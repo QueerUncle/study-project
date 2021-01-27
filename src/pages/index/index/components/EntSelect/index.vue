@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-27 16:34:37
+ * @Last Modified time: 2021-01-27 16:55:58
  */
 <template>
   <div class="ent-select">
@@ -68,7 +68,8 @@
 </template>
 <script lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { Http as request } from '@/assets/http/index';
+import api from '../../utils/api';
 
 export default {
   name: 'EntSelect',
@@ -79,8 +80,6 @@ export default {
     },
   },
   setup(props, context) {
-    const router = useRouter();
-    const route = useRoute();
     const entList: Partial<EntItem>[] = reactive([
       {
         id: '1',
@@ -97,8 +96,6 @@ export default {
     const pageSize = 10;
     const pageNum = ref(1);
     const total = ref(32);
-
-    console.log(context, route, 2333);
 
     onMounted(() => {
       console.log(selectEnt);
@@ -137,11 +134,28 @@ export default {
       }
       console.log(selectEnt, 23333);
     };
-    console.log(router);
 
     const handleChangePage = (page) => {
       console.log(page);
       pageNum.value = page;
+    };
+
+    const getEntList = async () => {
+      const reqBody = {
+        pageNum,
+        pageSize,
+      };
+      try {
+        // eslint-disable-next-line
+        // @ts-ignore
+        const { code, data, message } = await request.post(
+          api.getEntList,
+          reqBody,
+        );
+        console.log(code, data, message);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     return {
@@ -152,6 +166,7 @@ export default {
       pageNum,
       handleSelectItem,
       handleChangePage,
+      getEntList,
     };
   },
 };
