@@ -9,5 +9,6 @@ import { Options, Vue } from 'vue-class-component';
   components: {},
   name: 'Index',
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+}
 </script>
