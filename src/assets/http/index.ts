@@ -37,10 +37,10 @@ Http.interceptors.response.use((response: AxiosResponse) => {
     && response.config.data && JSON.parse(response.config.data).isImage) {
     return response.data;
   }
-  if (response.data.code == 200 || response.data.code == 406) { // eslint-disable-line
+  if (response.data.code === 200 || response.data.code === 406) { // eslint-disable-line
     return response.data;
   }
-  if (response.data.code == 400) {// eslint-disable-line
+  if (response.data.code === 400) {// eslint-disable-line
     (<any>ElMessage).error(response.data.msg || response.data.ElMessage); // eslint-disable-line
     return response.data;
   }
