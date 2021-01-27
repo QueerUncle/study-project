@@ -6,6 +6,7 @@ import router from './router';
 import store from './store';
 import 'element-plus/lib/theme-chalk/index.css';
 import '@/assets/css/reset.css';
+import '@/assets/css/public.less';
 
 createApp(App)
   .use(store)

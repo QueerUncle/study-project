@@ -10,7 +10,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/resources-list',
     name: 'ResourcesList',
-    component: () => import('../views/Resources/index.vue'),
+    component: () => import('../views/Resources/list/index.vue'),
+  },
+  {
+    path: '/resources-edit',
+    name: 'ResourcesEdit',
+    component: () => import('../views/Resources/edit/index.vue'),
   },
 ];
 
