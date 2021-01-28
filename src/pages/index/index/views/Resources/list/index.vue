@@ -250,7 +250,6 @@ export default {
     // 改变pageNum
     const handleCurrentChange = (val: number): void => {
       searchObj.pageNum = val;
-      console.log('我走了俩次');
       getResourcesList();
     };
 
@@ -261,7 +260,6 @@ export default {
         ElMessage.error(result.message);
         return;
       }
-      console.log(result);
       handleCurrentChange(1);
     };
 
