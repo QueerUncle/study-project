@@ -30,7 +30,9 @@
         </div>
         <div class="search-item-wrap">
           <span>企业：</span>
-          <div class = "empty-wrap"></div>
+          <div class="custom-empty-wrap">
+            {{searchObj.entInfo.length?searchObj.entInfo[0].name:''}}
+          </div>
           <el-button size='small' type="primary" plain @click = "handleOpenModal">选择企业</el-button>
         </div>
         <div class="search-item-wrap" >
@@ -210,8 +212,7 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
-      console.log(params);
-      searchObj.entInfo = '';
+      searchObj.entInfo = params.selectData; // eslint-disable-line
       entDialog.value.visible = params.visible;
     };
 
@@ -249,6 +250,7 @@ export default {
     // 改变pageNum
     const handleCurrentChange = (val: number): void => {
       searchObj.pageNum = val;
+      console.log('我走了俩次');
       getResourcesList();
     };
 

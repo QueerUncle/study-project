@@ -39,10 +39,12 @@
         </el-form-item>
         <el-form-item label="所属企业" prop="entInfo">
           <div style="display: flex;align-items: center;">
-            <el-input
-              style="margin-right:20px;width: 60%"
-              v-model="ruleForm.entInfo"
-              placeholder="所属企业列表可复选"/>
+            <div
+              :style = "`${!ruleForm.entInfo.length ? 'color:#DCDFE6' : ''}`"
+              style="margin-right:20px;width:60%;height: 40px;"
+              class="custom-empty-wrap">
+              {{entListStr}}
+            </div>
             <el-button size='mini' type="primary" @click = "handleOpenModal">选择企业</el-button>
           </div>
         </el-form-item>
@@ -79,7 +81,7 @@
             </el-table-column>
             <el-table-column prop="address" label="重复">
               <template #default="{ row }">
-                <el-checkbox v-model="row.hasRepeated"/>
+                <el-checkbox disabled v-model="row.hasRepeated"/>
               </template>
             </el-table-column>
             <el-table-column width="100" label="操作">
@@ -101,7 +103,7 @@
 </template>
 
 <script lang='ts'>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Http } from '@/assets/http/';
 import Api from '@/pages/index/index/utils/api';
@@ -118,6 +120,7 @@ export default {
     const Router = useRouter();
     const Route = useRoute();
     console.log(Route.query);
+
     // 企业选择器参数
     const entDialog = ref({
       singleSelect: false,
@@ -152,6 +155,17 @@ export default {
       ],
     });
 
+    // 计算属性
+    const entListStr = computed((): string => {
+      let str = '所属企业列表可复选';
+      const { entInfo } = ruleForm.value;
+      if (!entInfo.length) return str;
+      for (let i = 0; i < entInfo.length; i += 1) {
+        str += `${entInfo[i].name}，`;
+      }
+      return str;
+    });
+
     // 查重
     const handlerRechecking = () => {
       console.log('查重');
@@ -164,6 +178,7 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
+      ruleForm.value.entInfo = params.selectData;
       entDialog.value.visible = params.visible;
     };
 
@@ -195,7 +210,7 @@ export default {
 
     // 保存资源类型
     const saveResourceType = () => {
-      const result: any = Http.post(Api.saveResourceType, ruleForm);
+      const result: any = Http.post(Api.saveResourceType, ruleForm.value);
       if (!result.success) {
         ElMessage.error(result.message);
         return;
@@ -208,6 +223,22 @@ export default {
     const handlerSave = () => {
       customForm.value.validate((valid) => {
         if (valid) {
+          if (!ruleForm.value.entInfo.length) {
+            ElMessage.error('请选择所属企业。');
+            return;
+          }
+          if (!ruleForm.value.sourceTag.length) {
+            ElMessage.error('请选择所属企业。');
+            return;
+          }
+
+          const { sourceTag } = ruleForm.value;
+          for (let i = 0; i < sourceTag.length; i += 1) {
+            if (!sourceTag[i].tagName || !sourceTag[i].tagType || !sourceTag[i].description) {
+              ElMessage.error('类型标签内有空值，请输入后在保存');
+              return;
+            }
+          }
           saveResourceType();
         }
       });
@@ -215,6 +246,7 @@ export default {
 
     onMounted(() => {
       console.log('mounted');
+      customForm.value.resetFields();
     });
 
     return {
@@ -222,6 +254,7 @@ export default {
       customForm,
       ruleForm,
       rules,
+      entListStr,
       handlerRechecking,
       handleOpenModal,
       handleEntSelect,
