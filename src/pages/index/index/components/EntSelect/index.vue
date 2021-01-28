@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-27 17:47:40
+ * @Last Modified time: 2021-01-28 09:44:41
  */
 <template>
   <div class="ent-select">
@@ -137,7 +137,7 @@ export default {
       const param = flag
         ? {
             visible: false,
-            selectData: [],
+            selectData: selectEnt,
           }
         : { visible: false };
       /* eslint-enable */
