@@ -106,11 +106,12 @@ import { useRouter, useRoute } from 'vue-router';
 import { Http } from '@/assets/http/';
 import Api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import EntSelect from '../../../components/EntSelect/index.vue';
 
 export default {
   name: 'ResourcesEdit',
   components: {
-    EntSelect: () => import('../../../components/EntSelect/index.vue'),
+    EntSelect,
   },
   setup(props, context) {
     console.log(props, context);
@@ -119,7 +120,7 @@ export default {
     console.log(Route.query);
     // 企业选择器参数
     const entDialog = ref({
-      singleSelect: true,
+      singleSelect: false,
       visible: false,
     });
 

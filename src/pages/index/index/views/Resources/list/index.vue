@@ -113,11 +113,12 @@ import { useRouter } from 'vue-router';
 import { Http } from '@/assets/http';
 import Api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import EntSelect from '../../../components/EntSelect/index.vue';
 
 export default {
   name: 'ResourcesList',
   components: {
-    EntSelect: () => import('../../../components/EntSelect/index.vue'),
+    EntSelect,
   },
   setup(props, context) {
     console.log(props, context);
@@ -209,6 +210,8 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
+      console.log(params);
+      searchObj.entInfo = '';
       entDialog.value.visible = params.visible;
     };
 
