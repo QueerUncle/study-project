@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-27 17:19:58
+ * @Last Modified time: 2021-01-27 17:47:40
  */
 <template>
   <div class="ent-select">
@@ -16,6 +16,7 @@
       <el-table
         :data="entList"
         height="300px"
+        v-loading="loading"
       >
         <el-table-column
           width="60"
@@ -87,11 +88,13 @@ export default {
   setup(props, context) {
     const entList = ref([]); // 企业列表
     let selectEnt: Partial<EntItem>[] = reactive([]); // 选中的企业列表
-    const pageSize = 10;
-    const pageNum = ref(1);
-    const total = ref(0);
+    const pageSize = 10; // 数据条数
+    const pageNum = ref(1); // 当前页面
+    const total = ref(0); // 总数
+    const loading = ref(true);
 
-    const getEntList = async () => {
+    // 获取企业列表
+    const getEntList = async (): Promise<void> => {
       const reqBody = {
         pageNum: pageNum.value,
         pageSize,
@@ -108,6 +111,7 @@ export default {
           return;
         }
         const { list, page } = data;
+        // 获取回数据后，根据选中的内容设置选中
         for (let i = 0; i < list.length; i += 1) {
           if (selectEnt.findIndex((item) => item.id === list[i].id) !== -1) {
             list[i].selected = true;
@@ -115,6 +119,7 @@ export default {
             list[i].selected = false;
           }
         }
+        // 处理page相关
         total.value = page.total;
         pageNum.value = page.pageNum;
         entList.value = list;
@@ -123,6 +128,10 @@ export default {
       }
     };
 
+    /**
+     * 关闭弹窗
+     * @param {boolean} flag true是关闭 false是确定
+     */
     const handleCloseModal = (flag: boolean): void => {
       /* eslint-disable */
       const param = flag
@@ -135,9 +144,14 @@ export default {
       context.emit('handleEntSelect', param);
     };
 
-    const handleSelectItem = (data) => {
+    /**
+     * 选中某一条数据
+     * @param {*} data
+     */
+    const handleSelectItem = (data: EntItem): void => {
       const { entDialog } = props;
       const { singleSelect } = entDialog;
+      // 单选
       if (singleSelect) {
         selectEnt.length = 0;
         selectEnt.push(data);
@@ -147,26 +161,27 @@ export default {
           }
         }
       } else {
+        // 多选
         // eslint-disable-next-line
         if (data.selected) {
+          // 选中就加进去
           selectEnt.push(data);
         } else {
+          // 删除就在里面删除掉
           selectEnt = reactive(selectEnt.filter((item) => item.id !== data.id));
         }
       }
-      console.log(selectEnt, 23333);
     };
 
-    const handleChangePage = (page) => {
-      console.log(page);
+    // 页数变更
+    const handleChangePage = (page: number): void => {
       pageNum.value = page;
       getEntList();
     };
 
     onMounted(async () => {
-      console.log(selectEnt);
       await getEntList();
-      console.log(entList, 232323);
+      loading.value = false;
     });
 
     return {
@@ -178,6 +193,7 @@ export default {
       handleSelectItem,
       handleChangePage,
       getEntList,
+      loading,
     };
   },
 };
@@ -194,5 +210,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
+}
+/deep/.el-dialog__body {
+  padding: 15px 20px;
 }
 </style>
