@@ -1,15 +1,13 @@
-<!--
-  @Author: lize
-  @Date: 2021/1/27
-  @Description : 资源类型列表
-  @Parames :
-  @Example :
-  @Last Modified by: lize
-  @Last Modified time: 2021/1/27
- -->
+/*
+ * @Author: libf
+ * @Date: 2021-01-28 09:46:55
+ * @Last Modified by: libf
+ * @Last Modified time: 2021-01-28 10:44:55
+ */
+
 <template>
   <div class="resources-list-page-wrap custom-class-wrap">
-    <div class="custom-header-title-wrap">策略管理-资源类型管理</div>
+    <div class="custom-header-title-wrap">策略管理-策略列表</div>
     <div class="custom-header-search-wrap">
       <div class="search-left-wrap">
         <div class="search-item-wrap">
@@ -31,7 +29,7 @@
         </div>
         <div class="search-item-wrap">
           <span>企业：</span>
-          <div class="empty-wrap"></div>
+          <div class="empty-wrap">{{searchObj.entInfo.name}}</div>
           <el-button
             size="small"
             type="primary"
@@ -51,8 +49,8 @@
         <el-button
           size="small"
           type="primary"
-          @click="handlerEdit()"
-        >新增资源类型</el-button>
+          @click="handleEditStrategy()"
+        >新增策略</el-button>
       </div>
     </div>
     <div class="resources-content-wrap">
@@ -60,12 +58,11 @@
         <el-select
           style="margin-right: 10px"
           v-model="resourcesTypeValue"
-          clearable
           placeholder="请选择"
           size="small"
         >
           <el-option
-            v-for="item in resourcesTypeList"
+            v-for="item in searchList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -86,7 +83,7 @@
       </div>
       <div class="content-table-wrap">
         <el-table
-          :data="resourcesList"
+          :data="strategyList"
           :max-height="400"
           style="width: 100%"
         >
@@ -95,23 +92,33 @@
             width="80"
           >
             <template #default="scope">
-              <span>{{scope.$index + 1}}</span>
+              <span>{{(searchObj.pageNum - 1) * searchObj.pageSize + scope.$index + 1}}</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="sourceType"
-            label="资源类型"
+            prop="description"
+            label="描述"
           />
           <el-table-column
-            prop="sourceKey"
-            label="资源类型key"
+            prop="updateTime"
+            label="更新时间"
+            width="180"
           />
           <el-table-column
-            prop="sourceTag"
-            label="资源标签"
+            prop="business"
+            label="来源业务"
+            width="280"
           >
             <template #default="{ row }">
-              <span>{{getResourcesTagStr(row.sourceTag)}}</span>
+              <span>{{row.business.name}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="entInfo"
+            label="归属企业"
+          >
+            <template #default="{ row }">
+              <span>{{handleRenderEnt(row.entInfo)}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -121,11 +128,11 @@
             <template #default="{ row }">
               <div class="active-wrap">
                 <span
-                  @click="handlerEdit(row)"
+                  @click="handleEditStrategy(row)"
                   class="active-item-wrap"
                 >编辑</span>
                 <span
-                  @click="handlerDel(row)"
+                  @click="handleDeleteStrategy(row)"
                   class="active-item-wrap"
                 >删除</span>
               </div>
@@ -135,12 +142,10 @@
         <div class="page-wrap">
           <el-pagination
             background
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             v-model:currentPage="searchObj.pageNum"
-            :page-sizes="[10, 20, 30, 40]"
             :page-size="searchObj.pageSize"
-            layout="sizes, prev, pager, next"
+            layout="prev, pager, next"
             :total="searchObj.total"
           ></el-pagination>
         </div>
@@ -163,12 +168,11 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import EntSelect from '../../components/EntSelect/index.vue';
 
 export default {
-  name: 'ResourcesList',
+  name: 'StrategyList',
   components: {
     EntSelect,
   },
-  setup(props, context) {
-    console.log(props, context);
+  setup() {
     const Router = useRouter();
     // 企业选择器参数
     const entDialog = ref({
@@ -181,19 +185,15 @@ export default {
     const businessValue = ref('');
 
     // 资源类型
-    const resourcesTypeList = ref([
+    const searchList = ref([
       {
-        value: 'type',
-        label: '资源类型',
-      },
-      {
-        value: 'key',
-        label: '资源类型key',
+        value: 'description',
+        label: '描述',
       },
     ]);
 
     // 资源类型Value发生Change时
-    const resourcesTypeValue = ref('');
+    const resourcesTypeValue = ref('description');
 
     // 检索的关键字
     const searchKey = ref('');
@@ -202,53 +202,36 @@ export default {
     const searchObj = reactive({
       business: {}, // 业务
       entInfo: {}, // 企业信息
-      sourceType: '', // 资源类型
-      sourceKey: '', // 资源类型key
+      description: '', // 资源类型
       pageSize: 10, // 每页多少条
       pageNum: 1, // 当前页
       total: 0, // 总条数
     });
 
     // 资源列表
-    const resourcesList = ref([]);
+    const strategyList = ref([]);
 
-    // 表头
-    const columns = [
-      {
-        type: 'index',
-      },
-      {
-        type: 'sourceType',
-        label: '资源类型',
-      },
-      {
-        type: 'sourceKey',
-        label: '资源类型key',
-      },
-      {
-        type: 'sourceTag',
-        label: '资源标签',
-      },
-      {
-        type: 'active',
-        label: '操作',
-      },
-    ];
+    // 渲染企业
+    const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
+      let res = '';
+      for (let i = 0; i < arr.length; i += 1) {
+        res += `${arr[i].name}，`;
+      }
+      return res.substring(0, res.length - 2);
+    };
 
-    // 获取资源列表
-    const getResourcesList = async () => {
+    // 获取策略列表
+    const getStrategyList = async () => {
       /* eslint-disable */
-      searchObj.sourceType =
-        resourcesTypeValue.value === 'type' ? searchKey.value : '';
-      searchObj.sourceKey =
-        resourcesTypeValue.value === 'key' ? searchKey.value : '';
+      searchObj.description = searchKey.value || '';
+
       /* eslint-enable */
-      const result: any = await Http.post(Api.getResourcesList, searchObj);
+      const result: any = await Http.post(Api.getStrategyList, searchObj);
       if (!result.success) {
         ElMessage.error(result.message);
         return;
       }
-      resourcesList.value = result.data.list;
+      strategyList.value = result.data.list;
       searchObj.pageSize = result.data.page.pageSize;
       searchObj.pageNum = result.data.page.pageNum;
       searchObj.total = result.data.page.total;
@@ -261,57 +244,41 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
-      entDialog.value.visible = params.visible;
+      const { selectData, visible } = params;
+
+      entDialog.value.visible = visible;
+      [searchObj.entInfo] = selectData;
     };
 
     // 业务发生Change时
     const businessValueChange = (value: any): void => {
-      // eslint-disable-next-line
-      searchObj.business = businessList.value.filter(
+      [searchObj.business] = businessList.value.filter(
         (item) => item.id === value,
-      )[0];
+      );
     };
 
-    // 资源标签处理
-    const getResourcesTagStr = (sourceTag: Array<any>): string => {
-      if (!sourceTag || !sourceTag.length) return '';
-      let str = '';
-      for (let i = 0; i < sourceTag.length; i += 1) {
-        str += `${sourceTag[i].tagName}：${sourceTag[i].tagType}，`;
-      }
-      return str;
-    };
-
-    // table编辑
-    const handlerEdit = (row?: any) => {
+    // 编辑策略
+    const handleEditStrategy = (row?: any) => {
       const query = row && row.id ? { id: row.id } : {};
       Router.push({
-        path: '/resources-edit',
+        path: '/strategy-detail',
         query,
       });
-    };
-
-    // 改变pageSize
-    const handleSizeChange = (val: number): void => {
-      searchObj.pageNum = 1;
-      searchObj.pageSize = val;
-      getResourcesList();
     };
 
     // 改变pageNum
     const handleCurrentChange = (val: number): void => {
       searchObj.pageNum = val;
-      getResourcesList();
+      getStrategyList();
     };
 
-    // 删除资源
-    const deleteSource = async (id) => {
-      const result: any = await Http.post(Api.deleteSource, { id });
+    // 删除策略
+    const deleteStrategy = async (id) => {
+      const result: any = await Http.post(Api.deleteStrategy, { id });
       if (!result.success) {
         ElMessage.error(result.message);
         return;
       }
-      console.log(result);
       handleCurrentChange(1);
     };
 
@@ -325,42 +292,38 @@ export default {
       businessList.value = result.data.list;
     };
 
-    // table删除
-    const handlerDel = (row) => {
-      ElMessageBox.confirm('确定删除该条资源？', '提示', {
+    // 删除策略
+    const handleDeleteStrategy = (row) => {
+      ElMessageBox.confirm('确定删除该策略？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        deleteSource(row.id);
+        deleteStrategy(row.id);
       });
     };
 
     onMounted(() => {
       getBusinessList();
-      getResourcesList();
+      getStrategyList();
     });
     return {
       entDialog,
       businessList,
       businessValue,
-      resourcesTypeList,
+      searchList,
       resourcesTypeValue,
       searchKey,
       searchObj,
-      resourcesList,
-      columns,
-      getResourcesTagStr,
+      strategyList,
       handleOpenModal,
       handleEntSelect,
-      handlerEdit,
-      handlerDel,
-      handleSizeChange,
+      handleEditStrategy,
+      handleDeleteStrategy,
       businessValueChange,
       handleCurrentChange,
-      deleteSource,
       getBusinessList,
-      getResourcesList,
+      handleRenderEnt,
     };
   },
 };

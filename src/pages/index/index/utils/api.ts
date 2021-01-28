@@ -4,6 +4,8 @@ const prefix = '';
 
 const strategyManageApi = {
   getEntList: `${prefix}/getEntList`,
+  getStrategyList: `${prefix}/getStrategyList`,
+  deleteStrategy: `${prefix}/deleteStrategy`,
 };
 
 const api = {

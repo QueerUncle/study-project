@@ -8,6 +8,11 @@ const routes: Array<RouteRecordRaw> = [
     component: Index,
   },
   {
+    path: '/strategy-detail',
+    name: 'detail',
+    component: () => import('../views/Strategy/detail.vue'),
+  },
+  {
     path: '/resources-list',
     name: 'ResourcesList',
     component: () => import('../views/Resources/list/index.vue'),
