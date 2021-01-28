@@ -10,7 +10,9 @@ const sourceTypeApi = {
   // 保存资源类型
   saveResourceType: '/editSourceType',
   // 资源类型key查重
-  // Rechecking： '',
+  Rechecking: '/sourceTypeKeyRechecking',
+  // 获取资源详情
+  getResourcesDetail: '/sourceDetail',
 };
 
 export default sourceTypeApi;

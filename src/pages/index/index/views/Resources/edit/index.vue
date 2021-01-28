@@ -14,7 +14,9 @@
       <div class = "search-left-wrap"/>
       <div class = "search-right-wrap">
         <el-button size='small' type="primary" @click = "handlerBack">返回</el-button>
-        <el-button size='small' type="primary" @click = "handlerSave">保存</el-button>
+        <el-button :disabled="isRechecking" size='small' type="primary" @click = "handlerSave">
+          保存
+        </el-button>
       </div>
     </div>
     <div class = "resources-edit-content-wrap">
@@ -25,10 +27,13 @@
         <el-form-item label="类型key" prop="sourceKey">
           <div style="display: flex;align-items: center;">
             <el-input
+              @change="handlerChange"
               style="margin-right: 20px;width: 60%"
               v-model="ruleForm.sourceKey"
               placeholder="类型key" />
-            <el-button size='mini' type="primary" @click = "handlerRechecking">查重</el-button>
+            <el-button size='mini' type="primary" @click = "handlerRechecking(ruleForm.sourceKey)">
+              查重
+            </el-button>
           </div>
         </el-form-item>
         <el-form-item label="所属业务" prop="business">
@@ -37,11 +42,12 @@
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属企业" prop="entInfo">
+        <el-form-item label="所属企业" prop="entInfoStr">
           <div style="display: flex;align-items: center;">
             <el-input
-              style="margin-right:20px;width: 60%"
-              v-model="ruleForm.entInfo"
+              style="margin-right:20px;width:60%;height: 40px;"
+              readonly
+              v-model="ruleForm.entInfoStr"
               placeholder="所属企业列表可复选"/>
             <el-button size='mini' type="primary" @click = "handleOpenModal">选择企业</el-button>
           </div>
@@ -79,7 +85,7 @@
             </el-table-column>
             <el-table-column prop="address" label="重复">
               <template #default="{ row }">
-                <el-checkbox v-model="row.hasRepeated"/>
+                <el-checkbox disabled v-model="row.hasRepeated"/>
               </template>
             </el-table-column>
             <el-table-column width="100" label="操作">
@@ -106,20 +112,24 @@ import { useRouter, useRoute } from 'vue-router';
 import { Http } from '@/assets/http/';
 import Api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import EntSelect from '../../../components/EntSelect/index.vue';
 
 export default {
   name: 'ResourcesEdit',
   components: {
-    EntSelect: () => import('../../../components/EntSelect/index.vue'),
+    EntSelect,
   },
   setup(props, context) {
     console.log(props, context);
     const Router = useRouter();
     const Route = useRoute();
-    console.log(Route.query);
+
+    // 是否可以查重
+    const isRechecking = ref(true);
+
     // 企业选择器参数
     const entDialog = ref({
-      singleSelect: true,
+      singleSelect: false,
       visible: false,
     });
 
@@ -128,11 +138,13 @@ export default {
 
     // 表单数据
     const ruleForm = ref({
+      id: '',
       sourceType: '', // 类型描述
       sourceKey: '', // 资源类型key
       business: [], // 所属业务
       entInfo: [], // 所属企业
       sourceTag: [], // 资源标签
+      entInfoStr: '', // 所属企业Str
     });
 
     // form 验证
@@ -146,14 +158,30 @@ export default {
       business: [
         { required: true, message: '请选择所属业务', trigger: 'change' },
       ],
-      entInfo: [
+      entInfoStr: [
         { required: true, message: '请选择所属企业', trigger: 'change' },
       ],
     });
 
     // 查重
-    const handlerRechecking = () => {
-      console.log('查重');
+    const handlerRechecking = async (key): Promise<any> => {
+      if (!key) {
+        ElMessage.error('请先填写类型key');
+        return false;
+      }
+      const result: any = await Http.post(Api.Rechecking, { key });
+      if (!result.success) {
+        ElMessage.error(result.message);
+        return false;
+      }
+      ElMessage.success('可以使用！');
+      isRechecking.value = false;
+      return true;
+    };
+
+    // 资源类型key发生变化
+    const handlerChange = () => {
+      isRechecking.value = true;
     };
 
     // 打开企业选择器
@@ -163,6 +191,12 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
+      ruleForm.value.entInfo = params.selectData;
+      let str = '';
+      for (let i = 0; i < params.selectData.length; i += 1) {
+        str += `${params.selectData[i].name}，`;
+      }
+      ruleForm.value.entInfoStr = str;
       entDialog.value.visible = params.visible;
     };
 
@@ -194,7 +228,7 @@ export default {
 
     // 保存资源类型
     const saveResourceType = () => {
-      const result: any = Http.post(Api.saveResourceType, ruleForm);
+      const result: any = Http.post(Api.saveResourceType, ruleForm.value);
       if (!result.success) {
         ElMessage.error(result.message);
         return;
@@ -207,13 +241,45 @@ export default {
     const handlerSave = () => {
       customForm.value.validate((valid) => {
         if (valid) {
+          if (!ruleForm.value.sourceTag.length) {
+            ElMessage.error('请添加类型标签。');
+            return;
+          }
+
+          const { sourceTag } = ruleForm.value;
+          for (let i = 0; i < sourceTag.length; i += 1) {
+            if (!sourceTag[i].tagName || !sourceTag[i].tagType || !sourceTag[i].description) {
+              ElMessage.error('类型标签内有空值，请输入后在保存');
+              return;
+            }
+          }
           saveResourceType();
         }
       });
     };
 
+    // 获取该条资源详情
+    const getResourcesDetail = async () => {
+      if (!Route.query.id) return;
+      const result: any = await Http.post(Api.getResourcesDetail, { id: Route.query.id });
+      if (!result.success) {
+        ElMessage.error(result.message);
+        return;
+      }
+      Object.assign(ruleForm.value, result.data);
+      if (ruleForm.value.entInfo.length) {
+        let str = '';
+        for (let i = 0; i < ruleForm.value.entInfo.length; i += 1) {
+          str += `${ruleForm.value.entInfo[i].name}，`;
+        }
+        ruleForm.value.entInfoStr = str;
+      }
+      isRechecking.value = false;
+    };
+
     onMounted(() => {
-      console.log('mounted');
+      customForm.value.resetFields();
+      getResourcesDetail();
     });
 
     return {
@@ -221,6 +287,9 @@ export default {
       customForm,
       ruleForm,
       rules,
+      isRechecking,
+      getResourcesDetail,
+      handlerChange,
       handlerRechecking,
       handleOpenModal,
       handleEntSelect,

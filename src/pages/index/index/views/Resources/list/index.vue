@@ -30,7 +30,9 @@
         </div>
         <div class="search-item-wrap">
           <span>企业：</span>
-          <div class = "empty-wrap"></div>
+          <div class="custom-empty-wrap">
+            {{searchObj.entInfo.length?searchObj.entInfo[0].name:''}}
+          </div>
           <el-button size='small' type="primary" plain @click = "handleOpenModal">选择企业</el-button>
         </div>
         <div class="search-item-wrap" >
@@ -113,11 +115,12 @@ import { useRouter } from 'vue-router';
 import { Http } from '@/assets/http';
 import Api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import EntSelect from '../../../components/EntSelect/index.vue';
 
 export default {
   name: 'ResourcesList',
   components: {
-    EntSelect: () => import('../../../components/EntSelect/index.vue'),
+    EntSelect,
   },
   setup(props, context) {
     console.log(props, context);
@@ -209,6 +212,7 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
+      searchObj.entInfo = params.selectData; // eslint-disable-line
       entDialog.value.visible = params.visible;
     };
 
@@ -256,7 +260,6 @@ export default {
         ElMessage.error(result.message);
         return;
       }
-      console.log(result);
       handleCurrentChange(1);
     };
 
