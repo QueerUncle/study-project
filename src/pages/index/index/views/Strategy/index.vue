@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 09:46:55
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-28 10:44:55
+ * @Last Modified time: 2021-01-28 14:06:57
  */
 
 <template>
@@ -29,7 +29,7 @@
         </div>
         <div class="search-item-wrap">
           <span>企业：</span>
-          <div class="empty-wrap">{{searchObj.entInfo.name}}</div>
+          <div class="custom-empty-wrap">{{searchObj.entInfo.name}}</div>
           <el-button
             size="small"
             type="primary"

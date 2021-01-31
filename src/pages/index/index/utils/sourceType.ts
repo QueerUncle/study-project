@@ -2,9 +2,9 @@
 
 const sourceTypeApi = {
   // 获取业务列表
-  getBusinessList: '/getBusinessList',
+  getBusinessList: '/sys/api/auth/app/list',
   // 获取资源列表
-  getResourcesList: '/sourceTypeList',
+  getResourcesList: '/api/sourceTypeList',
   // 删除资源类型
   deleteSource: '/deleteSource',
   // 保存资源类型
