@@ -14,19 +14,12 @@
       <div class = "search-left-wrap">
         <div class="search-item-wrap">
           <span>业务：</span>
-          <el-select
-            v-model="businessValue"
-            placeholder="请选择"
-            clearable
-            size="small"
-            @change = "businessValueChange">
-            <el-option
-              v-for="item in businessList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
+          <div class="custom-empty-wrap">
+            {{searchObj.businessStr}}
+          </div>
+          <el-button size='small' type="primary" plain @click = "handleOpenBusinessModal">
+            选择业务
+          </el-button>
         </div>
         <div class="search-item-wrap">
           <span>企业：</span>
@@ -106,6 +99,11 @@
       :entDialog="entDialog"
       @handleEntSelect="handleEntSelect"
       v-if="entDialog.visible"/>
+    <BusiSelect
+      :businessDialog="businessDialog"
+      @handleBusinessSelect="handleBusinessSelect"
+      v-if="businessDialog.visible"
+    />
   </div>
 </template>
 
@@ -116,11 +114,13 @@ import { Http } from '@/assets/http';
 import Api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import EntSelect from '../../../components/EntSelect/index.vue';
+import BusiSelect from '../../../components/BusiSelect/index.vue';
 
 export default {
   name: 'ResourcesList',
   components: {
     EntSelect,
+    BusiSelect,
   },
   setup(props, context) {
     console.log(props, context);
@@ -130,11 +130,12 @@ export default {
       singleSelect: true,
       visible: false,
     });
-    // 业务下拉
-    const businessList = ref([]);
-    // 业务下拉Value
-    const businessValue = ref('');
-
+    // 业务选择器参数
+    const businessDialog = ref({
+      singleSelect: true,
+      visible: false,
+      selectedData: [],
+    });
     // 资源类型
     const resourcesTypeList = ref([
       {
@@ -156,6 +157,7 @@ export default {
     // 搜索数据
     const searchObj = reactive({
       business: {}, // 业务
+      businessStr: '', // 业务str
       entInfo: {}, // 企业信息
       sourceType: '', // 资源类型
       sourceKey: '', // 资源类型key
@@ -216,9 +218,28 @@ export default {
       entDialog.value.visible = params.visible;
     };
 
-    // 业务发生Change时
-    const businessValueChange = (value: any): void => {
-      searchObj.business = businessList.value.filter((item) => item.id === value)[0]; // eslint-disable-line
+    // 打开业务选择器
+    const handleOpenBusinessModal = () => {
+      businessDialog.value.visible = true;
+      businessDialog.value.selectedData = [searchObj.business];
+    };
+    // 渲染企业
+    const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
+      let res = '';
+      for (let i = 0; i < arr.length; i += 1) {
+        res += `${arr[i].name}，`;
+      }
+      return res.substring(0, res.length - 2);
+    };
+
+    // 选择业务
+    const handleBusinessSelect = (params) => {
+      const { selectData, visible } = params;
+      if (selectData) {
+        searchObj.business = selectData[0]; // eslint-disable-line
+        searchObj.businessStr = handleRenderEnt([searchObj.business]);
+      }
+      businessDialog.value.visible = visible;
     };
 
     // 资源标签处理
@@ -263,16 +284,6 @@ export default {
       handleCurrentChange(1);
     };
 
-    // 获取业务下拉
-    const getBusinessList = async () => {
-      const result: any = await Http.get(Api.getBusinessList);
-      if (!result.success) {
-        ElMessage.error(result.message);
-        return;
-      }
-      businessList.value = result.data.list;
-    };
-
     // table删除
     const handlerDel = (row) => {
       ElMessageBox.confirm('确定删除该条资源？', '提示', {
@@ -285,29 +296,27 @@ export default {
     };
 
     onMounted(() => {
-      getBusinessList();
       getResourcesList();
     });
     return {
       entDialog,
-      businessList,
-      businessValue,
+      businessDialog,
       resourcesTypeList,
       resourcesTypeValue,
       searchKey,
       searchObj,
       resourcesList,
       columns,
+      handleBusinessSelect,
+      handleOpenBusinessModal,
       getResourcesTagStr,
       handleOpenModal,
       handleEntSelect,
       handlerEdit,
       handlerDel,
       handleSizeChange,
-      businessValueChange,
       handleCurrentChange,
       deleteSource,
-      getBusinessList,
       getResourcesList,
     };
   },

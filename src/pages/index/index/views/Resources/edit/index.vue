@@ -36,11 +36,17 @@
             </el-button>
           </div>
         </el-form-item>
-        <el-form-item label="所属业务" prop="business">
-          <el-select style="width: 60%" v-model="ruleForm.business" placeholder="请选择策略所属业务">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="所属业务" prop="businessStr">
+          <div style="display: flex;align-items: center;">
+            <el-input
+              style="margin-right:20px;width:60%;height: 40px;"
+              readonly
+              v-model="ruleForm.businessStr"
+              placeholder="请选择资源所属业务"/>
+            <el-button size='mini' type="primary" @click = "handleOpenBusinessModal">
+              选择业务
+            </el-button>
+          </div>
         </el-form-item>
         <el-form-item label="所属企业" prop="entInfoStr">
           <div style="display: flex;align-items: center;">
@@ -103,6 +109,11 @@
       :entDialog="entDialog"
       @handleEntSelect="handleEntSelect"
       v-if="entDialog.visible"/>
+    <BusiSelect
+      :businessDialog="businessDialog"
+      @handleBusinessSelect="handleBusinessSelect"
+      v-if="businessDialog.visible"
+    />
   </div>
 </template>
 
@@ -113,11 +124,13 @@ import { Http } from '@/assets/http/';
 import Api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import EntSelect from '../../../components/EntSelect/index.vue';
+import BusiSelect from '../../../components/BusiSelect/index.vue';
 
 export default {
   name: 'ResourcesEdit',
   components: {
     EntSelect,
+    BusiSelect,
   },
   setup(props, context) {
     console.log(props, context);
@@ -133,6 +146,13 @@ export default {
       visible: false,
     });
 
+    // 业务选择器参数
+    const businessDialog = ref({
+      singleSelect: false,
+      visible: false,
+      selectedData: [],
+    });
+
     // form节点
     const customForm = ref(null);
 
@@ -142,6 +162,7 @@ export default {
       sourceType: '', // 类型描述
       sourceKey: '', // 资源类型key
       business: [], // 所属业务
+      businessStr: '', // 所属业务Str
       entInfo: [], // 所属企业
       sourceTag: [], // 资源标签
       entInfoStr: '', // 所属企业Str
@@ -155,7 +176,7 @@ export default {
       sourceKey: [
         { required: true, message: '请输入资源类型key', trigger: 'blur' },
       ],
-      business: [
+      businessStr: [
         { required: true, message: '请选择所属业务', trigger: 'change' },
       ],
       entInfoStr: [
@@ -198,6 +219,29 @@ export default {
       }
       ruleForm.value.entInfoStr = str;
       entDialog.value.visible = params.visible;
+    };
+    // 打开业务选择器
+    const handleOpenBusinessModal = () => {
+      businessDialog.value.visible = true;
+      businessDialog.value.selectedData = ruleForm.value.business;
+    };
+    // 渲染企业
+    const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
+      let res = '';
+      for (let i = 0; i < arr.length; i += 1) {
+        res += `${arr[i].name}，`;
+      }
+      return res.substring(0, res.length - 2);
+    };
+
+    // 选择业务
+    const handleBusinessSelect = (params) => {
+      const { selectData, visible } = params;
+      if (selectData) {
+        ruleForm.value.business = selectData; // eslint-disable-line
+        ruleForm.value.businessStr = handleRenderEnt(ruleForm.value.business);
+      }
+      businessDialog.value.visible = visible;
     };
 
     // 新增标签
@@ -284,10 +328,13 @@ export default {
 
     return {
       entDialog,
+      businessDialog,
       customForm,
       ruleForm,
       rules,
       isRechecking,
+      handleOpenBusinessModal,
+      handleBusinessSelect,
       getResourcesDetail,
       handlerChange,
       handlerRechecking,
