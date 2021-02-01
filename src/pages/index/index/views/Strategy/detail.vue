@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-31 19:19:10
+ * @Last Modified time: 2021-02-01 09:22:23
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -18,7 +18,7 @@
         <el-button
           size="small"
           type="primary"
-          @click="handlerSave"
+          @click="handleSave"
         >保存</el-button>
       </div>
     </div>
@@ -48,7 +48,7 @@
           <el-cascader
             style="width:55%"
             :options="businessOptions"
-            :props="{multiple: true}"
+            :props="{multiple: false}"
             v-if="businessOptions.length"
             v-model="ruleForm.business"
             placeholder="请选择策略所属业务"
@@ -62,8 +62,10 @@
           <div style="display: flex;align-items: center;">
             <el-input
               style="margin-right:20px;width: 55%"
-              :value="handleRenderEnt(ruleForm.entInfo)"
+              v-model="ruleForm.entInfoStr"
               placeholder="所属企业列表可复选"
+              ref="entRef"
+              readonly
             />
             <el-button
               size="mini"
@@ -413,6 +415,9 @@ export default {
     // form节点
     const customForm = ref(null);
 
+    // 企业节点
+    const entRef = ref(null);
+
     // 表单数据
     const ruleForm = ref({
       description: '', // 描述
@@ -421,6 +426,7 @@ export default {
       strategyLogic: false,
       source: [],
       roleList: [],
+      entInfoStr: '',
       conditionList: [],
       actionList: [],
     });
@@ -530,12 +536,25 @@ export default {
       entDialog.value.visible = true;
     };
 
+    // 渲染企业
+    const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
+      let res = '';
+      for (let i = 0; i < arr.length; i += 1) {
+        res += `${arr[i].name}，`;
+      }
+      return res.substring(0, res.length - 2);
+    };
+
     // 选择企业
     const handleEntSelect = (params: any): any => {
       const { selectData, visible } = params;
 
       entDialog.value.visible = visible;
       ruleForm.value.entInfo = selectData;
+      // entRef.value.focus();
+      entRef.value.blur();
+      console.log(entRef.value);
+      ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
     };
 
     const handleSelectResource = (index) => {
@@ -622,8 +641,6 @@ export default {
     };
 
     const handleEmptyItem = (index) => {
-      console.log(index, 23223);
-      console.log(ruleForm.value.conditionList[index]);
       ruleForm.value.conditionList[index].conditionValue = '';
       ruleForm.value.conditionList[index].condition = '';
     };
@@ -655,22 +672,49 @@ export default {
       goBack();
     };
 
+    // 验证各条数据是否都有填写了数据
+    const handleValidateData = () => {
+      let flag = true;
+      const list = Object.keys(ruleForm.value);
+      for (let i = 0; i < list.length; i += 1) {
+        if (typeof ruleForm.value[list[i]] === 'object') {
+          if (!ruleForm.value[list[i]].length) {
+            flag = false;
+            break;
+          }
+          for (let j = 0; j < ruleForm.value[list[i]].length; j += 1) {
+            const arr = Object.keys(ruleForm.value[list[i]][j]);
+            for (let o = 0; o < arr.length; o += 1) {
+              if (
+                ruleForm.value[list[i]][j][arr[o]] === 'string' && // eslint-disable-line
+                ruleForm.value[list[i]][j][arr[o]] === ''
+              ) {
+                flag = false;
+                break;
+              }
+            }
+          }
+        }
+      }
+      return flag;
+    };
+
     // 保存
-    const handlerSave = () => {
+    const handleSave = () => {
       customForm.value.validate((valid) => {
-        if (valid) {
-          saveResourceType();
+        if (valid && handleValidateData()) {
+          // saveResourceType();
+          console.log(2323223);
+        } else {
+          console.log(1112323223);
+          ElMessage.error('信息填写不完整');
         }
       });
     };
 
-    // 渲染企业
-    const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
-      let res = '';
-      for (let i = 0; i < arr.length; i += 1) {
-        res += `${arr[i].name}，`;
-      }
-      return res.substring(0, res.length - 2);
+    const handleValidateItem = () => {
+      const data = customForm.value.validateField('entInfo');
+      console.log(data, 23323);
     };
 
     onMounted(async () => {
@@ -683,6 +727,7 @@ export default {
       entDialog,
       resourceDialog,
       customForm,
+      entRef,
       ruleForm,
       rules,
       businessOptions,
@@ -694,11 +739,11 @@ export default {
       handleAddItem,
       goBack,
       saveResourceType,
-      handlerSave,
-      handleRenderEnt,
+      handleSave,
       handleResourceSelect,
       handleSelectResource,
       handleCopyItem,
+      handleValidateItem,
     };
   },
 };

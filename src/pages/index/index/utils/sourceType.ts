@@ -6,13 +6,13 @@ const sourceTypeApi = {
   // 获取资源列表
   getResourcesList: '/api/sourceTypeList',
   // 删除资源类型
-  deleteSource: '/deleteSource',
+  deleteSource: '/api/deleteSource',
   // 保存资源类型
-  saveResourceType: '/editSourceType',
+  saveResourceType: '/api/editSourceType',
   // 资源类型key查重
-  Rechecking: '/sourceTypeKeyRechecking',
+  Rechecking: '/api/sourceTypeKeyRechecking',
   // 获取资源详情
-  getResourcesDetail: '/sourceDetail',
+  getResourcesDetail: '/api/sourceDetail',
 };
 
 export default sourceTypeApi;
