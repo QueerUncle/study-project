@@ -79,8 +79,11 @@
             <el-table-column prop="address" label="标签类型">
               <template #default="{ row }">
                 <el-select v-model="row.tagType" placeholder="请选择策略所属业务">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                  <el-option
+                  v-for="(item, index) in tagTypeAry"
+                  :key = "index"
+                  :label = "item.name"
+                  :value = "item.id"/>
                 </el-select>
               </template>
             </el-table-column>
@@ -118,7 +121,7 @@
 </template>
 
 <script lang='ts'>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Http } from '@/assets/http/';
 import Api from '@/pages/index/index/utils/api';
@@ -183,6 +186,19 @@ export default {
         { required: true, message: '请选择所属企业', trigger: 'change' },
       ],
     });
+
+    // 标签类型下拉
+    const tagTypeAry = reactive([]);
+
+    // 获取标签类型
+    const getTagType = async (): Promise<any> => {
+      const result: any = await Http.get(Api.geTagType);
+      if (!result.success) {
+        ElMessage.error(result.message);
+        return;
+      }
+      tagTypeAry.push(...result.data.list);
+    };
 
     // 查重
     const handlerRechecking = async (key): Promise<any> => {
@@ -318,11 +334,15 @@ export default {
         }
         ruleForm.value.entInfoStr = str;
       }
+      if (ruleForm.value.business.length) {
+        ruleForm.value.businessStr = handleRenderEnt(ruleForm.value.business);
+      }
       isRechecking.value = false;
     };
 
     onMounted(() => {
       customForm.value.resetFields();
+      getTagType();
       getResourcesDetail();
     });
 
@@ -333,9 +353,9 @@ export default {
       ruleForm,
       rules,
       isRechecking,
+      tagTypeAry,
       handleOpenBusinessModal,
       handleBusinessSelect,
-      getResourcesDetail,
       handlerChange,
       handlerRechecking,
       handleOpenModal,

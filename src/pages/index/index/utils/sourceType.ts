@@ -9,10 +9,12 @@ const sourceTypeApi = {
   deleteSource: '/api/deleteSource',
   // 保存资源类型
   saveResourceType: '/api/editSourceType',
+  // 获取标签类型
+  geTagType: '/sys/api/auth/tag/type',
   // 资源类型key查重
   Rechecking: '/api/sourceTypeKeyRechecking',
   // 获取资源详情
-  getResourcesDetail: '/api/sourceDetail',
+  getResourcesDetail: '/sys/api/auth/resource/view',
 };
 
 export default sourceTypeApi;
