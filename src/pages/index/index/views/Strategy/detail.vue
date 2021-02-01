@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-01 09:22:23
+ * @Last Modified time: 2021-02-01 11:33:42
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -45,7 +45,7 @@
           label="所属业务"
           prop="business"
         >
-          <el-cascader
+          <!-- <el-cascader
             style="width:55%"
             :options="businessOptions"
             :props="{multiple: false}"
@@ -53,7 +53,18 @@
             v-model="ruleForm.business"
             placeholder="请选择策略所属业务"
             clearable
-          ></el-cascader>
+          ></el-cascader>-->
+          <el-input
+            style="margin-right:20px;width: 55%"
+            v-model="ruleForm.businessStr"
+            placeholder="请选择策略所属业务"
+            readonly
+          />
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleOpenBusinessModal"
+          >选择业务</el-button>
         </el-form-item>
         <el-form-item
           label="所属企业"
@@ -64,7 +75,6 @@
               style="margin-right:20px;width: 55%"
               v-model="ruleForm.entInfoStr"
               placeholder="所属企业列表可复选"
-              ref="entRef"
               readonly
             />
             <el-button
@@ -364,10 +374,16 @@
       @handleEntSelect="handleEntSelect"
       v-if="entDialog.visible"
     />
+    {{resourceDialog}}
     <ResourceSelect
       :resourceDialog="resourceDialog"
       @handleResourceSelect="handleResourceSelect"
       v-if="resourceDialog.visible"
+    />
+    <BusinessSelect
+      :businessDialog="businessDialog"
+      @handleBusinessSelect="handleBusinessSelect"
+      v-if="businessDialog.visible"
     />
   </div>
 </template>
@@ -380,12 +396,14 @@ import api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import EntSelect from '../../components/EntSelect/index.vue';
 import ResourceSelect from '../../components/ResourceSelect/index.vue';
+import BusinessSelect from '../../components/BusiSelect/index.vue';
 
 export default {
   name: 'StrategyEdit',
   components: {
     EntSelect,
     ResourceSelect,
+    BusinessSelect,
   },
   setup() {
     const Router = useRouter();
@@ -399,11 +417,18 @@ export default {
       visible: false,
     });
 
-    // 企业选择器参数
+    // 资源选择器参数
     const resourceDialog = ref({
       singleSelect: true,
       visible: false,
       index: -1,
+    });
+
+    // 业务选择器参数
+    const businessDialog = ref({
+      singleSelect: true,
+      visible: false,
+      selectedData: [],
     });
 
     // 业务的options
@@ -422,6 +447,7 @@ export default {
     const ruleForm = ref({
       description: '', // 描述
       business: [], // 所属业务
+      businessStr: '',
       entInfo: [], // 所属企业
       strategyLogic: false,
       source: [],
@@ -491,35 +517,6 @@ export default {
       /* eslint-enable */
     };
 
-    // 处理获取业务数据
-    const handleRenameData = (list) => {
-      /* eslint-disable */
-      for (let i = 0; i < list.length; i += 1) {
-        list[i].value = list[i].id;
-        list[i].label = list[i].name;
-        delete list[i].id;
-        delete list[i].name;
-        if (list[i].list) {
-          list[i].children = list[i].list;
-          delete list[i].list;
-          handleRenameData(list[i].children);
-        }
-      }
-      /* eslint-enable */
-      return list;
-    };
-
-    // 获取业务列表
-    const getBusinessList = async () => {
-      const res: any = await request.get(api.getBusinessList);
-      const { code, data, message } = res;
-      if (code !== 200) {
-        ElMessage.error(message);
-        return;
-      }
-      businessOptions.value = handleRenameData(data.list);
-    };
-
     // 获取条件值集
     const getConditionList = async () => {
       const res: any = await request.get(api.getConditionList);
@@ -536,6 +533,12 @@ export default {
       entDialog.value.visible = true;
     };
 
+    // 打开业务选择器
+    const handleOpenBusinessModal = () => {
+      businessDialog.value.visible = true;
+      businessDialog.value.selectedData = [ruleForm.value.business];
+    };
+
     // 渲染企业
     const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
       let res = '';
@@ -545,15 +548,24 @@ export default {
       return res.substring(0, res.length - 2);
     };
 
+    // 选择业务
+    const handleBusinessSelect = (params) => {
+      const { selectData, visible } = params;
+
+      if (selectData) {
+        [ruleForm.value.business] = selectData;
+        ruleForm.value.businessStr = handleRenderEnt(selectData);
+      }
+
+      businessDialog.value.visible = visible;
+    };
+
     // 选择企业
     const handleEntSelect = (params: any): any => {
       const { selectData, visible } = params;
 
       entDialog.value.visible = visible;
       ruleForm.value.entInfo = selectData;
-      // entRef.value.focus();
-      entRef.value.blur();
-      console.log(entRef.value);
       ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
     };
 
@@ -703,23 +715,15 @@ export default {
     const handleSave = () => {
       customForm.value.validate((valid) => {
         if (valid && handleValidateData()) {
-          // saveResourceType();
-          console.log(2323223);
+          console.log(233);
         } else {
-          console.log(1112323223);
           ElMessage.error('信息填写不完整');
         }
       });
     };
 
-    const handleValidateItem = () => {
-      const data = customForm.value.validateField('entInfo');
-      console.log(data, 23323);
-    };
-
     onMounted(async () => {
       customForm.value.resetFields();
-      await getBusinessList();
       await getConditionList();
     });
 
@@ -743,7 +747,9 @@ export default {
       handleResourceSelect,
       handleSelectResource,
       handleCopyItem,
-      handleValidateItem,
+      handleOpenBusinessModal,
+      businessDialog,
+      handleBusinessSelect,
     };
   },
 };
