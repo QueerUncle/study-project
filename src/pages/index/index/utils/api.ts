@@ -6,7 +6,9 @@ const strategyManageApi = {
   getEntList: `${prefix}/sys/api/auth/ent/list`,
   getStrategyList: `${prefix}/api/getStrategyList`,
   deleteStrategy: `${prefix}/api/deleteStrategy`,
-  getConditionList: `${prefix}/api/getMainCondition`,
+  getConditionList: `${prefix}/sys/api/auth/resource/tag`,
+  getMainConditionList: `${prefix}/sys/api/auth/principle/tag`,
+  getConditionValueList: `${prefix}/sys/api/auth/resource/tag/variable`,
 };
 
 const api = {
