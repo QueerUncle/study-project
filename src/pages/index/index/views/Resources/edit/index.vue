@@ -27,13 +27,9 @@
         <el-form-item label="类型key" prop="sourceKey">
           <div style="display: flex;align-items: center;">
             <el-input
-              @change="handlerChange"
               style="margin-right: 20px;width: 60%"
               v-model="ruleForm.sourceKey"
               placeholder="类型key" />
-            <el-button size='mini' type="primary" @click = "handlerRechecking(ruleForm.sourceKey)">
-              查重
-            </el-button>
           </div>
         </el-form-item>
         <el-form-item label="所属业务" prop="businessStr">
@@ -54,7 +50,7 @@
               style="margin-right:20px;width:60%;height: 40px;"
               readonly
               v-model="ruleForm.entInfoStr"
-              placeholder="所属企业列表可复选"/>
+              placeholder="所属企业列表（可复选），【默认*】"/>
             <el-button size='mini' type="primary" @click = "handleOpenModal">选择企业</el-button>
           </div>
         </el-form-item>
@@ -140,9 +136,6 @@ export default {
     const Router = useRouter();
     const Route = useRoute();
 
-    // 是否可以查重
-    const isRechecking = ref(true);
-
     // 企业选择器参数
     const entDialog = ref({
       singleSelect: false,
@@ -166,9 +159,14 @@ export default {
       sourceKey: '', // 资源类型key
       business: [], // 所属业务
       businessStr: '', // 所属业务Str
-      entInfo: [], // 所属企业
+      entInfo: [
+        {
+          id: '-1',
+          name: '全部企业',
+        },
+      ], // 所属企业
       sourceTag: [], // 资源标签
-      entInfoStr: '', // 所属企业Str
+      entInfoStr: '全部企业', // 所属企业Str
     });
 
     // form 验证
@@ -200,27 +198,6 @@ export default {
       tagTypeAry.push(...result.data.list);
     };
 
-    // 查重
-    const handlerRechecking = async (key): Promise<any> => {
-      if (!key) {
-        ElMessage.error('请先填写类型key');
-        return false;
-      }
-      const result: any = await Http.post(Api.Rechecking, { key });
-      if (!result.success) {
-        ElMessage.error(result.message);
-        return false;
-      }
-      ElMessage.success('可以使用！');
-      isRechecking.value = false;
-      return true;
-    };
-
-    // 资源类型key发生变化
-    const handlerChange = () => {
-      isRechecking.value = true;
-    };
-
     // 打开企业选择器
     const handleOpenModal = () => {
       entDialog.value.visible = true;
@@ -228,6 +205,11 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
+      if (!params.selectData || !params.selectData.length) {
+        ruleForm.value.entInfo = [{ id: '-1', name: '全部企业' }];
+        ruleForm.value.entInfoStr = '全部企业';
+        return;
+      }
       ruleForm.value.entInfo = params.selectData;
       let str = '';
       for (let i = 0; i < params.selectData.length; i += 1) {
@@ -337,7 +319,6 @@ export default {
       if (ruleForm.value.business.length) {
         ruleForm.value.businessStr = handleRenderEnt(ruleForm.value.business);
       }
-      isRechecking.value = false;
     };
 
     onMounted(() => {
@@ -352,12 +333,9 @@ export default {
       customForm,
       ruleForm,
       rules,
-      isRechecking,
       tagTypeAry,
       handleOpenBusinessModal,
       handleBusinessSelect,
-      handlerChange,
-      handlerRechecking,
       handleOpenModal,
       handleEntSelect,
       handlerDel,
