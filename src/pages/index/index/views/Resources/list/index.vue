@@ -122,13 +122,13 @@ export default {
     EntSelect,
     BusiSelect,
   },
-  setup(props, context) {
-    console.log(props, context);
+  setup() {
     const Router = useRouter();
     // 企业选择器参数
     const entDialog = ref({
       singleSelect: true,
       visible: false,
+      selectedData: [],
     });
     // 业务选择器参数
     const businessDialog = ref({
@@ -148,7 +148,7 @@ export default {
       },
     ]);
 
-    // 资源类型Value发生Change时
+    // 资源类型Value
     const resourcesTypeValue = ref('');
 
     // 检索的关键字
@@ -209,6 +209,7 @@ export default {
 
     // 打开企业选择器
     const handleOpenModal = () => {
+      // entDialog.value.visible = true;
       entDialog.value.visible = true;
     };
 
@@ -317,7 +318,6 @@ export default {
       handleSizeChange,
       handleCurrentChange,
       deleteSource,
-      getResourcesList,
     };
   },
 };
