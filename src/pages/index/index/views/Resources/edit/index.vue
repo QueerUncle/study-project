@@ -275,14 +275,16 @@ export default {
     };
 
     // 保存资源类型
-    const saveResourceType = () => {
-      const result: any = Http.post(Api.saveResourceType, ruleForm.value);
+    const saveResourceType = async () => {
+      const result: any = await Http.post(Api.saveResourceType, ruleForm.value);
       if (!result.success) {
         ElMessage.error(result.message);
         return;
       }
       ElMessage.success(result.message);
-      handlerBack();
+      setTimeout(() => {
+        handlerBack();
+      }, 1000);
     };
 
     // 保存
