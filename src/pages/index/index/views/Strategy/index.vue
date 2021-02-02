@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 09:46:55
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-28 14:06:57
+ * @Last Modified time: 2021-02-02 10:26:11
  */
 
 <template>
@@ -12,20 +12,13 @@
       <div class="search-left-wrap">
         <div class="search-item-wrap">
           <span>业务：</span>
-          <el-select
-            v-model="businessValue"
-            placeholder="请选择"
-            clearable
+          <div class="custom-empty-wrap">{{searchObj.businessStr}}</div>
+          <el-button
             size="small"
-            @change="businessValueChange"
-          >
-            <el-option
-              v-for="item in businessList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+            type="primary"
+            plain
+            @click="handleOpenBusinessModal"
+          >选择业务</el-button>
         </div>
         <div class="search-item-wrap">
           <span>企业：</span>
@@ -156,6 +149,11 @@
       @handleEntSelect="handleEntSelect"
       v-if="entDialog.visible"
     />
+    <BusiSelect
+      :businessDialog="businessDialog"
+      @handleBusinessSelect="handleBusinessSelect"
+      v-if="businessDialog.visible"
+    />
   </div>
 </template>
 
@@ -166,11 +164,13 @@ import { Http } from '@/assets/http';
 import Api from '@/pages/index/index/utils/api';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import EntSelect from '../../components/EntSelect/index.vue';
+import BusiSelect from '../../components/BusiSelect/index.vue';
 
 export default {
   name: 'StrategyList',
   components: {
     EntSelect,
+    BusiSelect,
   },
   setup() {
     const Router = useRouter();
@@ -178,6 +178,13 @@ export default {
     const entDialog = ref({
       singleSelect: true,
       visible: false,
+      selectedData: [],
+    });
+    // 业务选择器参数
+    const businessDialog = ref({
+      singleSelect: true,
+      visible: false,
+      selectedData: [],
     });
     // 业务下拉
     const businessList = ref([]);
@@ -201,6 +208,7 @@ export default {
     // 搜索数据
     const searchObj = reactive({
       business: {}, // 业务
+      businessStr: '',
       entInfo: {}, // 企业信息
       description: '', // 资源类型
       pageSize: 10, // 每页多少条
@@ -218,6 +226,12 @@ export default {
         res += `${arr[i].name}，`;
       }
       return res.substring(0, res.length - 2);
+    };
+
+    // 打开业务选择器
+    const handleOpenBusinessModal = () => {
+      businessDialog.value.visible = true;
+      businessDialog.value.selectedData = [searchObj.business];
     };
 
     // 获取策略列表
@@ -311,6 +325,7 @@ export default {
       entDialog,
       businessList,
       businessValue,
+      businessDialog,
       searchList,
       resourcesTypeValue,
       searchKey,

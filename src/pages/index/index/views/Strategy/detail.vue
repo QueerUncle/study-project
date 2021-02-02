@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-02 10:06:55
+ * @Last Modified time: 2021-02-02 10:22:13
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -192,7 +192,7 @@
                     :label="item.name"
                     :value="item.id"
                     :key="item.id"
-                    v-for="item in conditionOptions"
+                    v-for="item in mainConditionOptions"
                   ></el-option>
                 </el-select>
               </template>
@@ -453,6 +453,9 @@ export default {
     // 条件的options
     const conditionOptions = ref([]);
 
+    // 主体条件的options
+    const mainConditionOptions = ref([]);
+
     // form节点
     const customForm = ref(null);
 
@@ -539,17 +542,6 @@ export default {
       conditionDialog.value.index = index;
     };
 
-    // 获取条件值集
-    const getConditionList = async () => {
-      const res: any = await request.get(api.getConditionList);
-      const { code, data, message } = res;
-      if (code !== 200) {
-        ElMessage.error(message);
-        return;
-      }
-      conditionOptions.value = data.list;
-    };
-
     // 打开企业选择器
     const handleOpenModal = () => {
       entDialog.value.visible = true;
@@ -614,6 +606,28 @@ export default {
       }
 
       resourceDialog.value.visible = visible;
+    };
+
+    // 获取条件值集
+    const getConditionList = async () => {
+      const res: any = await request.get(api.getConditionList);
+      const { code, data, message } = res;
+      if (code !== 200) {
+        ElMessage.error(message);
+        return;
+      }
+      conditionOptions.value = data.list;
+    };
+
+    // 获取条件值集
+    const getMainConditionList = async () => {
+      const res: any = await request.get(api.getMainConditionList);
+      const { code, data, message } = res;
+      if (code !== 200) {
+        ElMessage.error(message);
+        return;
+      }
+      mainConditionOptions.value = data.list;
     };
 
     // 新增标签
@@ -754,6 +768,7 @@ export default {
     onMounted(async () => {
       customForm.value.resetFields();
       await getConditionList();
+      await getMainConditionList();
     });
 
     return {
@@ -766,6 +781,7 @@ export default {
       businessDialog,
       businessOptions,
       conditionOptions,
+      mainConditionOptions,
       conditionDialog,
       handleOpenModal,
       handleEntSelect,
