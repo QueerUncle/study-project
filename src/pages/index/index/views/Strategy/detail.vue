@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-01 11:33:42
+ * @Last Modified time: 2021-02-02 10:06:55
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -271,7 +271,7 @@
                   />
                   <el-button
                     type="primary"
-                    @click="handleSelectResource($index)"
+                    @click="handleSelectCondition($index)"
                   >选择</el-button>
                 </div>
               </template>
@@ -374,7 +374,6 @@
       @handleEntSelect="handleEntSelect"
       v-if="entDialog.visible"
     />
-    {{resourceDialog}}
     <ResourceSelect
       :resourceDialog="resourceDialog"
       @handleResourceSelect="handleResourceSelect"
@@ -385,11 +384,17 @@
       @handleBusinessSelect="handleBusinessSelect"
       v-if="businessDialog.visible"
     />
+    <ConditionSelect
+      :conditionDialog="conditionDialog"
+      @handleConditionSelect="handleConditionSelect"
+      v-if="conditionDialog.visible"
+    />
   </div>
 </template>
 
 <script lang='ts'>
-import { onMounted, ref } from 'vue';
+/* eslint-disable */
+import { onMounted, ref, toRaw } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Http as request } from '@/assets/http/';
 import api from '@/pages/index/index/utils/api';
@@ -397,6 +402,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import EntSelect from '../../components/EntSelect/index.vue';
 import ResourceSelect from '../../components/ResourceSelect/index.vue';
 import BusinessSelect from '../../components/BusiSelect/index.vue';
+import ConditionSelect from '../../components/ConditionValueSelect/index.vue';
 
 export default {
   name: 'StrategyEdit',
@@ -404,6 +410,7 @@ export default {
     EntSelect,
     ResourceSelect,
     BusinessSelect,
+    ConditionSelect,
   },
   setup() {
     const Router = useRouter();
@@ -415,6 +422,7 @@ export default {
     const entDialog = ref({
       singleSelect: false,
       visible: false,
+      selectedData: [],
     });
 
     // 资源选择器参数
@@ -428,6 +436,14 @@ export default {
     const businessDialog = ref({
       singleSelect: true,
       visible: false,
+      selectedData: [],
+    });
+
+    // 业务选择器参数
+    const conditionDialog = ref({
+      singleSelect: true,
+      visible: false,
+      index: -1,
       selectedData: [],
     });
 
@@ -517,6 +533,12 @@ export default {
       /* eslint-enable */
     };
 
+    // 打开条件值选择弹窗
+    const handleSelectCondition = (index) => {
+      conditionDialog.value.visible = true;
+      conditionDialog.value.index = index;
+    };
+
     // 获取条件值集
     const getConditionList = async () => {
       const res: any = await request.get(api.getConditionList);
@@ -531,6 +553,7 @@ export default {
     // 打开企业选择器
     const handleOpenModal = () => {
       entDialog.value.visible = true;
+      entDialog.value.selectedData = ruleForm.value.entInfo;
     };
 
     // 打开业务选择器
@@ -552,7 +575,7 @@ export default {
     const handleBusinessSelect = (params) => {
       const { selectData, visible } = params;
 
-      if (selectData) {
+      if (selectData && selectData.length) {
         [ruleForm.value.business] = selectData;
         ruleForm.value.businessStr = handleRenderEnt(selectData);
       }
@@ -563,10 +586,16 @@ export default {
     // 选择企业
     const handleEntSelect = (params: any): any => {
       const { selectData, visible } = params;
-
+      if (selectData && selectData.length) {
+        ruleForm.value.entInfo = selectData;
+        ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
+      }
       entDialog.value.visible = visible;
-      ruleForm.value.entInfo = selectData;
-      ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
+    };
+
+    // 选择条件值
+    const handleConditionSelect = (params) => {
+      conditionDialog.value.visible = params.visible;
     };
 
     const handleSelectResource = (index) => {
@@ -576,7 +605,7 @@ export default {
 
     const handleResourceSelect = (params: any): any => {
       const { selectData, visible, index } = params;
-      if (selectData) {
+      if (selectData && selectData.length) {
         const { sourceType, sourceKey, sourceTag } = selectData[0];
         ruleForm.value.source[index].sourceType.name = sourceType;
         ruleForm.value.source[index].sourceType.id = sourceKey;
@@ -734,8 +763,10 @@ export default {
       entRef,
       ruleForm,
       rules,
+      businessDialog,
       businessOptions,
       conditionOptions,
+      conditionDialog,
       handleOpenModal,
       handleEntSelect,
       handleDeleteValidate,
@@ -748,8 +779,9 @@ export default {
       handleSelectResource,
       handleCopyItem,
       handleOpenBusinessModal,
-      businessDialog,
       handleBusinessSelect,
+      handleSelectCondition,
+      handleConditionSelect,
     };
   },
 };

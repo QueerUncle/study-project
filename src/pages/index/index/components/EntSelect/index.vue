@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-01 09:57:36
+ * @Last Modified time: 2021-02-02 10:08:24
  */
 <template>
   <div class="ent-select">
@@ -72,7 +72,7 @@
   </div>
 </template>
 <script lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, toRaw } from 'vue'; // eslint-disable-line
 import { Http as request } from '@/assets/http/index';
 import { ElMessage } from 'element-plus';
 import api from '../../utils/api';
@@ -180,6 +180,11 @@ export default {
     };
 
     onMounted(async () => {
+      const { entDialog } = props;
+      const { selectedData } = entDialog;
+      if (toRaw(selectedData).length) {
+        selectEnt = selectedData;
+      }
       await getEntList();
       loading.value = false;
     });
