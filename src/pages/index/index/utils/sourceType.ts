@@ -6,9 +6,9 @@ const sourceTypeApi = {
   // 获取资源列表
   getResourcesList: '/sys/api/auth/resource/list',
   // 删除资源类型
-  deleteSource: '/api/deleteSource',
+  deleteSource: '/sys/api/auth/resource/remove',
   // 保存资源类型
-  saveResourceType: '/api/editSourceType',
+  saveResourceType: '/sys/api/auth/resource/edit',
   // 获取标签类型
   geTagType: '/sys/api/auth/tag/type',
   // 资源类型key查重
