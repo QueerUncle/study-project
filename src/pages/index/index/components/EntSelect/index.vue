@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-02 10:08:24
+ * @Last Modified time: 2021-02-02 10:12:49
  */
 <template>
   <div class="ent-select">
@@ -182,7 +182,7 @@ export default {
     onMounted(async () => {
       const { entDialog } = props;
       const { selectedData } = entDialog;
-      if (toRaw(selectedData).length) {
+      if (selectedData && toRaw(selectedData).length) {
         selectEnt = selectedData;
       }
       await getEntList();
