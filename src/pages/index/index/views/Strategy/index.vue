@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 09:46:55
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-02 10:26:11
+ * @Last Modified time: 2021-02-02 15:57:02
  */
 
 <template>
@@ -36,6 +36,11 @@
             type="primary"
             @click="handleCurrentChange(1)"
           >查找列表</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="handleReset"
+          >重置</el-button>
         </div>
       </div>
       <div class="search-right-wrap">
@@ -280,6 +285,22 @@ export default {
       });
     };
 
+    // 重置
+    const handleReset = (): void => {
+      const resetObj = {
+        business: {}, // 业务
+        businessStr: '', // 业务str
+        entInfo: [], // 企业信息
+        pageSize: 10, // 每页多少条
+        pageNum: 1, // 当前页
+        total: 0, // 总条数
+        description: '', // 资源类型
+      };
+      searchKey.value = '';
+      Object.assign(searchObj, resetObj);
+      getStrategyList();
+    };
+
     // 改变pageNum
     const handleCurrentChange = (val: number): void => {
       searchObj.pageNum = val;
@@ -296,16 +317,6 @@ export default {
       handleCurrentChange(1);
     };
 
-    // 获取业务下拉
-    const getBusinessList = async () => {
-      const result: any = await Http.get(Api.getBusinessList);
-      if (!result.success) {
-        ElMessage.error(result.message);
-        return;
-      }
-      businessList.value = result.data.list;
-    };
-
     // 删除策略
     const handleDeleteStrategy = (row) => {
       ElMessageBox.confirm('确定删除该策略？', '提示', {
@@ -318,7 +329,6 @@ export default {
     };
 
     onMounted(() => {
-      getBusinessList();
       getStrategyList();
     });
     return {
@@ -328,6 +338,7 @@ export default {
       businessDialog,
       searchList,
       resourcesTypeValue,
+      handleOpenBusinessModal,
       searchKey,
       searchObj,
       strategyList,
@@ -337,8 +348,8 @@ export default {
       handleDeleteStrategy,
       businessValueChange,
       handleCurrentChange,
-      getBusinessList,
       handleRenderEnt,
+      handleReset,
     };
   },
 };

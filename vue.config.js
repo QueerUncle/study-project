@@ -1,26 +1,26 @@
 // const utils = require('./utils/utils');
 const Timestamp = new Date().getTime();
 // eslint-disable-next-line @typescript-eslint/no-var-requires,import/order
-const cbimConf = require("./utils/cbim.vue.Intermediate.js");
+const cbimConf = require('./utils/cbim.vue.Intermediate.js');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require("path");
+const path = require('path');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const TerserPlugin = require("terser-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const resolve = dir => path.join(__dirname, dir);
+const resolve = (dir) => path.join(__dirname, dir);
 
 // 分析工具
 const AnalyzerKey = false;
 // eslint-disable-next-line import/no-extraneous-dependencies
-const Analyzer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const Analyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Gzip压缩
 const CompressionWebpackPluginKey = true;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const CompressionWebpackPlugin = require("compression-webpack-plugin");
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
 // const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
@@ -38,12 +38,12 @@ module.exports = {
   // assetsDir: "./",
   // publicPath: './', // 根域上下文目录
 
-  productionSourceMap: !(process.env.VUE_APP_CUSTOM_ENV === "production"),
+  productionSourceMap: !(process.env.VUE_APP_CUSTOM_ENV === 'production'),
   // 用于测试的代理服务
   devServer: {
-    index: "index-index.html",
+    index: 'index-index.html',
     https: false,
-    proxy: "http://10.80.2.11:8300/" // 运营管理平台
+    proxy: 'http://10.80.2.11:8000/', // 运营管理平台
     // proxy: 'http://10.80.12.204:8300/', // 大涛
     // proxy: 'http://10.80.2.36:8300/', // 韩工
     // proxy: 'http:// 10.80.12.152:8300/', // 刘涛
@@ -54,13 +54,13 @@ module.exports = {
 
   // 移动端适配 适合css预处理语言
   css:
-    VUE_APP_CUSTOM_ENV === "mobile" || VUE_APP_CUSTOM_ENV === "mobileDev"
+    VUE_APP_CUSTOM_ENV === 'mobile' || VUE_APP_CUSTOM_ENV === 'mobileDev'
       ? {
           // eslint-disable-line
           loaderOptions: {
             postcss: {
               plugins: [
-                require("postcss-plugin-px2rem")({
+                require('postcss-plugin-px2rem')({
                   // eslint-disable-line
                   rootValue: 75, // 换算基数， 默认100 ，这样的话把根标签的字体规定为1rem为50px,这样就可以从设计稿上量出多少个px直接在代码中写多上px了。
                   // unitPrecision: 5, //允许REM单位增长到的十进制数字。
@@ -72,63 +72,63 @@ module.exports = {
                   // replace将自动设置为true。
                   // replace: true, // （布尔值）替换包含REM的规则，而不是添加回退。
                   mediaQuery: false, // (布尔值）允许在媒体查询中转换px。
-                  minPixelValue: 3 // 设置要替换的最小像素值(3px会被转rem)。 默认 0
-                })
-              ]
-            }
-          }
+                  minPixelValue: 3, // 设置要替换的最小像素值(3px会被转rem)。 默认 0
+                }),
+              ],
+            },
+          },
         }
       : {},
 
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     // eslint-disable-line
     // 移动端适配 适合css
-    VUE_APP_CUSTOM_ENV === "mobile" || VUE_APP_CUSTOM_ENV === "mobileDev" // eslint-disable-line
+    VUE_APP_CUSTOM_ENV === 'mobile' || VUE_APP_CUSTOM_ENV === 'mobileDev' // eslint-disable-line
       ? config.module
-          .rule("css")
+          .rule('css')
           .test(/\.css$/)
-          .oneOf("vue")
+          .oneOf('vue')
           .resourceQuery(/\?vue/)
-          .use("px2rem")
-          .loader("px2rem-loader")
+          .use('px2rem')
+          .loader('px2rem-loader')
           .options({
-            remUnit: 75
+            remUnit: 75,
           })
       : false;
   },
 
   // 约束打包大小的 webpack 配置
-  configureWebpack: config => {
+  configureWebpack: (config) => {
     config.optimization = {
       runtimeChunk: {
-        name: "runtime"
+        name: 'runtime',
       },
       splitChunks: {
         minSize: 102400,
         minChunks: 2,
         cacheGroups: {
           lib: {
-            name: "lib",
+            name: 'lib',
             test: /[vue|iview]/,
             priority: 0,
-            chunks: "all"
+            chunks: 'all',
           },
           common: {
-            name: "common",
-            chunks: "initial"
-          }
-        }
+            name: 'common',
+            chunks: 'initial',
+          },
+        },
       },
       minimizer: [
         new TerserPlugin({
           sourceMap: false,
           terserOptions: {
             compress: {
-              drop_console: process.env.NODE_ENV === "production" // eslint-disable-line
-            }
-          }
-        })
-      ]
+              drop_console: process.env.NODE_ENV === 'production', // eslint-disable-line
+            },
+          },
+        }),
+      ],
     };
 
     // 分析插件
@@ -139,13 +139,13 @@ module.exports = {
     if (CompressionWebpackPluginKey) {
       config.plugins.push(
         new CompressionWebpackPlugin({
-          filename: "[path].gz[query]",
-          algorithm: "gzip",
-          test: new RegExp("\\.(js|css)$"),
+          filename: '[path].gz[query]',
+          algorithm: 'gzip',
+          test: new RegExp('\\.(js|css)$'),
           threshold: 10240,
           minRatio: 0.8,
-          deleteOriginalAssets: false
-        })
+          deleteOriginalAssets: false,
+        }),
       );
     }
     // config.plugins.push(
@@ -157,8 +157,8 @@ module.exports = {
       output: {
         // 输出重构  打包编译后的 文件名称  【模块名称.版本号.时间戳】
         filename: `js/[name].${Timestamp}.js`,
-        chunkFilename: `js/[name].${Timestamp}.js`
-      }
+        chunkFilename: `js/[name].${Timestamp}.js`,
+      },
     };
-  }
+  },
 };

@@ -3,12 +3,12 @@ import sourceTypeApi from './sourceType';
 const prefix = '';
 
 const strategyManageApi = {
-  getEntList: `${prefix}/sys/api/auth/ent/list`,
-  getStrategyList: `${prefix}/api/getStrategyList`,
-  deleteStrategy: `${prefix}/api/deleteStrategy`,
-  getConditionList: `${prefix}/sys/api/auth/resource/tag`,
-  getMainConditionList: `${prefix}/sys/api/auth/principle/tag`,
-  getConditionValueList: `${prefix}/sys/api/auth/resource/tag/variable`,
+  getEntList: `${prefix}/auth/ent/list`,
+  getStrategyList: `${prefix}/auth/policy/list`,
+  deleteStrategy: `${prefix}/auth/policy/remove`,
+  getConditionList: `${prefix}/auth/resource/tag`,
+  getMainConditionList: `${prefix}/auth/principle/tag`,
+  getConditionValueList: `${prefix}/auth/resource/tag/variable`,
 };
 
 const api = {

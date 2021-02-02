@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-02 10:22:13
+ * @Last Modified time: 2021-02-02 13:53:29
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -263,7 +263,7 @@
               </template>
             </el-table-column>
             <el-table-column label="条件值">
-              <template #default="{ row }">
+              <template #default="{ row, $index }">
                 <div class="source-wrap">
                   <el-input
                     v-model="row.conditionValue"
@@ -539,6 +539,7 @@ export default {
     // 打开条件值选择弹窗
     const handleSelectCondition = (index) => {
       conditionDialog.value.visible = true;
+      console.log(index);
       conditionDialog.value.index = index;
     };
 
@@ -587,7 +588,19 @@ export default {
 
     // 选择条件值
     const handleConditionSelect = (params) => {
-      conditionDialog.value.visible = params.visible;
+      const { visible, selectData } = params;
+      const { index } = conditionDialog.value;
+      console.log(index, 232332);
+      conditionDialog.value.visible = visible;
+      console.log(selectData);
+
+      if (selectData) {
+        console.log(ruleForm.value);
+
+        // eslint-disable-next-line
+        ruleForm.value.conditionList[index].conditionValue +=
+          selectData[0].name;
+      }
     };
 
     const handleSelectResource = (index) => {
@@ -730,7 +743,11 @@ export default {
     // 验证各条数据是否都有填写了数据
     const handleValidateData = () => {
       let flag = true;
-      const list = Object.keys(ruleForm.value);
+      const temp = JSON.parse(JSON.stringify(ruleForm.value));
+      delete temp.businessStr;
+      delete temp.entInfoStr;
+      const list = Object.keys(temp);
+
       for (let i = 0; i < list.length; i += 1) {
         if (typeof ruleForm.value[list[i]] === 'object') {
           if (!ruleForm.value[list[i]].length) {
