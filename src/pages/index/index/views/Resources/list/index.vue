@@ -26,10 +26,14 @@
           <div class="custom-empty-wrap">
             {{searchObj.entInfo.length?searchObj.entInfo[0].name:''}}
           </div>
-          <el-button size='small' type="primary" plain @click="handleOpenModal">选择企业</el-button>
+          <el-button size='small' type="primary" plain @click="handleOpenModal">
+            选择企业
+          </el-button>
         </div>
         <div class="search-item-wrap" >
-          <el-button size='small' type="primary" @click="handleCurrentChange(1)">查找列表</el-button>
+          <el-button size='small' type="primary" @click="handleCurrentChange(1)">
+            查找列表
+          </el-button>
         </div>
       </div>
       <div class = "search-right-wrap">
