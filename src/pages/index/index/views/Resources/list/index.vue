@@ -17,7 +17,7 @@
           <div class="custom-empty-wrap">
             {{searchObj.businessStr}}
           </div>
-          <el-button size='small' type="primary" plain @click = "handleOpenBusinessModal">
+          <el-button size='small' type="primary" plain @click="handleOpenBusinessModal">
             选择业务
           </el-button>
         </div>
@@ -26,14 +26,14 @@
           <div class="custom-empty-wrap">
             {{searchObj.entInfo.length?searchObj.entInfo[0].name:''}}
           </div>
-          <el-button size='small' type="primary" plain @click = "handleOpenModal">选择企业</el-button>
+          <el-button size='small' type="primary" plain @click="handleOpenModal">选择企业</el-button>
         </div>
         <div class="search-item-wrap" >
-          <el-button size='small' type="primary" @click = "handleCurrentChange(1)">查找列表</el-button>
+          <el-button size='small' type="primary" @click="handleCurrentChange(1)">查找列表</el-button>
         </div>
       </div>
       <div class = "search-right-wrap">
-        <el-button size='small' type="primary"  @click = "handlerEdit()">新增资源类型</el-button>
+        <el-button size='small' type="primary"  @click="handlerEdit()">新增资源类型</el-button>
       </div>
     </div>
     <div class="resources-content-wrap">
@@ -56,7 +56,7 @@
           style="margin-left: 10px"
           size='small'
           type="primary"
-          @click = "handleCurrentChange(1)">查找</el-button>
+          @click="handleCurrentChange(1)">查找</el-button>
       </div>
       <div class="content-table-wrap">
         <el-table :data="resourcesList" :max-height = "400" style="width: 100%">
@@ -75,8 +75,8 @@
             <el-table-column width="100" label="操作">
               <template #default="{ row }">
                 <div class = "active-wrap" >
-                  <span @click = "handlerEdit(row)" class = "active-item-wrap">编辑</span>
-                  <span @click = "handlerDel(row)" class = "active-item-wrap">删除</span>
+                  <span @click="handlerEdit(row)" class = "active-item-wrap">编辑</span>
+                  <span @click="handlerDel(row)" class = "active-item-wrap">删除</span>
                 </div>
               </template>
             </el-table-column>
@@ -158,7 +158,7 @@ export default {
     const searchObj = reactive({
       business: {}, // 业务
       businessStr: '', // 业务str
-      entInfo: {}, // 企业信息
+      entInfo: [], // 企业信息
       sourceType: '', // 资源类型
       sourceKey: '', // 资源类型key
       pageSize: 10, // 每页多少条
@@ -209,7 +209,7 @@ export default {
 
     // 打开企业选择器
     const handleOpenModal = () => {
-      // entDialog.value.visible = true;
+      entDialog.value.selectedData = searchObj.entInfo;
       entDialog.value.visible = true;
     };
 

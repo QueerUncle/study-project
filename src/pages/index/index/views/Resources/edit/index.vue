@@ -13,8 +13,8 @@
     <div class="custom-header-search-wrap">
       <div class = "search-left-wrap"/>
       <div class = "search-right-wrap">
-        <el-button size='small' type="primary" @click = "handlerBack">返回</el-button>
-        <el-button :disabled="isRechecking" size='small' type="primary" @click = "handlerSave">
+        <el-button size='small' type="primary" @click="handlerBack">返回</el-button>
+        <el-button size='small' type="primary" @click="handlerSave">
           保存
         </el-button>
       </div>
@@ -39,7 +39,7 @@
               readonly
               v-model="ruleForm.businessStr"
               placeholder="请选择资源所属业务"/>
-            <el-button size='mini' type="primary" @click = "handleOpenBusinessModal">
+            <el-button size='mini' type="primary" @click="handleOpenBusinessModal">
               选择业务
             </el-button>
           </div>
@@ -51,7 +51,7 @@
               readonly
               v-model="ruleForm.entInfoStr"
               placeholder="所属企业列表（可复选），【默认*】"/>
-            <el-button size='mini' type="primary" @click = "handleOpenModal">选择企业</el-button>
+            <el-button size='mini' type="primary" @click="handleOpenModal">选择企业</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -59,7 +59,7 @@
         <div class = "label-wrap"><p>类型标签</p></div>
         <div class = "table-wrap">
           <div class = "btn-wrap">
-            <el-button size='mini' type="primary" @click = "handlerAddTag">新增类型标签</el-button>
+            <el-button size='mini' type="primary" @click="handlerAddTag">新增类型标签</el-button>
           </div>
           <el-table :data="ruleForm.sourceTag" style="width: 100%" :max-height = "300">
             <el-table-column label="序号" width="80">
@@ -96,7 +96,7 @@
             <el-table-column width="100" label="操作">
               <template #default="{ $index }">
                 <div class = "active-wrap" >
-                  <span @click = "handlerDel($index)" class = "active-item-wrap">删除</span>
+                  <span @click="handlerDel($index)" class = "active-item-wrap">删除</span>
                 </div>
               </template>
             </el-table-column>
@@ -139,7 +139,7 @@ export default {
     const entDialog = ref({
       singleSelect: false,
       visible: false,
-      selectData: [],
+      selectedData: [],
     });
 
     // 业务选择器参数
@@ -201,9 +201,9 @@ export default {
     // 打开企业选择器
     const handleOpenModal = () => {
       if (Number(ruleForm.value.entInfo[0].id) < 0) {
-        entDialog.value.selectData = [];
+        entDialog.value.selectedData = [];
       } else {
-        entDialog.value.selectData = ruleForm.value.entInfo;
+        entDialog.value.selectedData = ruleForm.value.entInfo;
       }
       entDialog.value.visible = true;
     };
