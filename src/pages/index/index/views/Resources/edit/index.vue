@@ -131,8 +131,7 @@ export default {
     EntSelect,
     BusiSelect,
   },
-  setup(props, context) {
-    console.log(props, context);
+  setup() {
     const Router = useRouter();
     const Route = useRoute();
 
@@ -140,6 +139,7 @@ export default {
     const entDialog = ref({
       singleSelect: false,
       visible: false,
+      selectData: [],
     });
 
     // 业务选择器参数
@@ -200,6 +200,11 @@ export default {
 
     // 打开企业选择器
     const handleOpenModal = () => {
+      if (Number(ruleForm.value.entInfo[0].id) < 0) {
+        entDialog.value.selectData = [];
+      } else {
+        entDialog.value.selectData = ruleForm.value.entInfo;
+      }
       entDialog.value.visible = true;
     };
 
@@ -208,6 +213,7 @@ export default {
       if (!params.selectData || !params.selectData.length) {
         ruleForm.value.entInfo = [{ id: '-1', name: '全部企业' }];
         ruleForm.value.entInfoStr = '全部企业';
+        entDialog.value.visible = params.visible;
         return;
       }
       ruleForm.value.entInfo = params.selectData;
@@ -341,7 +347,6 @@ export default {
       handlerDel,
       handlerAddTag,
       handlerBack,
-      saveResourceType,
       handlerSave,
     };
   },
