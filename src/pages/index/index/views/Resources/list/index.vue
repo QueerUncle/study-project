@@ -34,6 +34,9 @@
           <el-button size='small' type="primary" @click="handleCurrentChange(1)">
             查找列表
           </el-button>
+          <el-button size='small' type="primary" @click="handleReset">
+            重置
+          </el-button>
         </div>
       </div>
       <div class = "search-right-wrap">
@@ -211,6 +214,24 @@ export default {
       searchObj.total = result.data.page.total;
     };
 
+    // 重置
+    const handleReset = (): void => {
+      const resetObj = {
+        business: {}, // 业务
+        businessStr: '', // 业务str
+        entInfo: [], // 企业信息
+        sourceType: '', // 资源类型
+        sourceKey: '', // 资源类型key
+        pageSize: 10, // 每页多少条
+        pageNum: 1, // 当前页
+        total: 0, // 总条数
+      };
+      resourcesTypeValue.value = '';
+      searchKey.value = '';
+      Object.assign(searchObj, resetObj);
+      getResourcesList();
+    };
+
     // 打开企业选择器
     const handleOpenModal = () => {
       entDialog.value.selectedData = searchObj.entInfo;
@@ -312,6 +333,7 @@ export default {
       searchObj,
       resourcesList,
       columns,
+      handleReset,
       handleBusinessSelect,
       handleOpenBusinessModal,
       getResourcesTagStr,
