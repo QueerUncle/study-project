@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 09:46:55
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-02 15:57:02
+ * @Last Modified time: 2021-02-03 10:00:26
  */
 
 <template>
@@ -269,11 +269,14 @@ export default {
       [searchObj.entInfo] = selectData;
     };
 
-    // 业务发生Change时
-    const businessValueChange = (value: any): void => {
-      [searchObj.business] = businessList.value.filter(
-        (item) => item.id === value,
-      );
+    // 选择业务
+    const handleBusinessSelect = (params) => {
+      const { selectData, visible } = params;
+      if (selectData) {
+        searchObj.business = selectData[0]; // eslint-disable-line
+        searchObj.businessStr = handleRenderEnt([searchObj.business]);
+      }
+      businessDialog.value.visible = visible;
     };
 
     // 编辑策略
@@ -346,10 +349,10 @@ export default {
       handleEntSelect,
       handleEditStrategy,
       handleDeleteStrategy,
-      businessValueChange,
       handleCurrentChange,
       handleRenderEnt,
       handleReset,
+      handleBusinessSelect,
     };
   },
 };

@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-01 11:32:37
+ * @Last Modified time: 2021-02-03 09:58:34
  */
 <template>
   <div class="ent-select">
@@ -81,9 +81,8 @@ export default {
           ElMessage.error(message);
           return;
         }
-        const { list } = data;
         // 获取回数据后，根据选中的内容设置选中
-        businessList.value = handleRenameData(list);
+        businessList.value = handleRenameData(data);
       } catch (error) {
         ElMessage.error(error);
       }
@@ -143,7 +142,10 @@ export default {
     onMounted(async () => {
       const { businessDialog } = props;
       const { selectedData } = businessDialog;
-      selectEnt = selectedData;
+      if (selectedData) {
+        selectEnt = selectedData;
+      }
+
       await getBusinessList();
       setCheckedKeys(selectEnt);
       loading.value = false;
