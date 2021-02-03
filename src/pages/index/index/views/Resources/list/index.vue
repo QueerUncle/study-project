@@ -66,7 +66,7 @@
           @click="handleCurrentChange(1)">查找</el-button>
       </div>
       <div class="content-table-wrap">
-        <el-table :data="resourcesList" :max-height = "400" style="width: 100%">
+        <el-table :data="resourcesList" :max-height = "500" style="width: 100%">
             <el-table-column label="序号" width="80">
               <template #default="scope">
                 <span>{{scope.$index + 1}}</span>
