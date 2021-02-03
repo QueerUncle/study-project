@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-03 15:20:14
+ * @Last Modified time: 2021-02-03 17:02:07
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -179,7 +179,7 @@
           >
             <el-table-column label="主体类型">
               <template #default="{ row }">
-                <div>{{row.mainType}}</div>
+                <div>{{row.mainType}}(角色)</div>
               </template>
             </el-table-column>
             <el-table-column label="主体条件">
@@ -668,7 +668,7 @@ export default {
           sourceExample: '',
         },
         roleList: {
-          mainType: 'role(角色)',
+          mainType: 'role',
           mainCondition: '',
           mainValue: '',
         },
@@ -754,13 +754,18 @@ export default {
     const getDetailById = async () => {
       const { id } = Route.query;
       const result: any = await request.post(api.getStrategyDetail, { id });
-      console.log(result.success);
       if (!result.success) {
         ElMessage.error(result.message);
         return;
       }
       ruleForm.value = result.data;
-      console.log(result.data);
+      ruleForm.value.conditionList.forEach((item) => {
+        item.condition = JSON.parse(item.condition); // eslint-disable-line
+      });
+      ruleForm.value.source.forEach((item) => {
+        item.sourceType = JSON.parse(item.sourceType); // eslint-disable-line
+      });
+      ruleForm.value.strategyLogic = result.data?.strategyLogic ?? false;
       ruleForm.value.businessStr = handleRenderEnt([ruleForm.value.business]);
       ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
     };
@@ -851,10 +856,10 @@ export default {
     onMounted(async () => {
       const { id } = Route.query;
       customForm.value.resetFields();
-      getConditionList();
-      getMainConditionList();
+      await getConditionList();
+      await getMainConditionList();
       if (id) {
-        getDetailById();
+        await getDetailById();
       }
     });
 
