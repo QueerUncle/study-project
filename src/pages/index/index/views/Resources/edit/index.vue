@@ -195,7 +195,7 @@ export default {
         ElMessage.error(result.message);
         return;
       }
-      tagTypeAry.push(...result.data.list);
+      tagTypeAry.push(...result.data);
     };
 
     // 打开企业选择器

@@ -79,6 +79,13 @@
                 <span>{{getResourcesTagStr(row.sourceTag)}}</span>
               </template>
             </el-table-column>
+            <el-table-column prop="entInfo" label="企业名称">
+              <template #default="{ row }">
+                <span>
+                  {{row.entInfo.length && row.entInfo[0].id > -1 ? row.entInfo[0].name : ''}}
+                </span>
+              </template>
+            </el-table-column>
             <el-table-column width="100" label="操作">
               <template #default="{ row }">
                 <div class = "active-wrap" >
