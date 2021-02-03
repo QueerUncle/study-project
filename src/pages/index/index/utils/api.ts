@@ -9,6 +9,8 @@ const strategyManageApi = {
   getConditionList: `${prefix}/auth/resource/tag`,
   getMainConditionList: `${prefix}/auth/principle/tag`,
   getConditionValueList: `${prefix}/auth/resource/tag/variable`,
+  saveStrategy: `${prefix}/auth/policy/edit`,
+  getStrategyDetail: `${prefix}/auth/policy/view`,
 };
 
 const api = {

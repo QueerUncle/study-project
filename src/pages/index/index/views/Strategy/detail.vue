@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-02 13:53:29
+ * @Last Modified time: 2021-02-03 15:20:14
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -74,7 +74,7 @@
             <el-input
               style="margin-right:20px;width: 55%"
               v-model="ruleForm.entInfoStr"
-              placeholder="所属企业列表可复选"
+              placeholder="所属企业列表（可复选）【默认全部企业】"
               readonly
             />
             <el-button
@@ -248,10 +248,11 @@
               </template>
             </el-table-column>
             <el-table-column label="条件">
-              <template #default="{ row }">
+              <template #default="{ row, $index }">
                 <el-select
-                  v-model="row.condition"
+                  v-model="row.condition.key"
                   placeholder="条件值集"
+                  @change="handleChangeCondition($index)"
                 >
                   <el-option
                     :label="item.name"
@@ -312,10 +313,11 @@
             header-row-class-name="table-header"
           >
             <el-table-column label="资源类型">
-              <template #default="{ row }">
+              <template #default="{ row, $index }">
                 <el-select
                   v-model="row.sourceId"
                   placeholder="已添加资源类型范围"
+                  @change="handleChangeAction($index)"
                 >
                   <el-option
                     :label="item.sourceType.name"
@@ -467,11 +469,16 @@ export default {
       description: '', // 描述
       business: [], // 所属业务
       businessStr: '',
-      entInfo: [], // 所属企业
+      entInfo: [
+        {
+          id: '-1',
+          name: '全部企业',
+        },
+      ], // 所属企业
       strategyLogic: false,
       source: [],
       roleList: [],
-      entInfoStr: '',
+      entInfoStr: '全部企业',
       conditionList: [],
       actionList: [],
     });
@@ -497,6 +504,7 @@ export default {
       /* eslint-disable */
       const list = ruleForm.value.source;
       let res = list[0].sourceType.tags;
+      console.log(res, 3223323232);
       for (let i = 1; i < list.length; i += 1) {
         res = [
           ...new Set(
@@ -508,8 +516,9 @@ export default {
           ),
         ];
       }
+      console.log(res, 3223323);
 
-      for (let i = 1; i < ruleForm.value.conditionList.length; i += 1) {
+      for (let i = 0; i < ruleForm.value.conditionList.length; i += 1) {
         if (
           !res.some(
             (item) => item.tagName === ruleForm.value.conditionList[i].tagName,
@@ -519,7 +528,7 @@ export default {
         }
       }
 
-      for (let i = 1; i < res.length; i += 1) {
+      for (let i = 0; i < res.length; i += 1) {
         if (
           !ruleForm.value.conditionList.some(
             (item) => item.tagName === res[i].tagName,
@@ -527,12 +536,12 @@ export default {
         ) {
           ruleForm.value.conditionList.push({
             tagName: res[i].tagName,
-            id: '',
             conditionValue: '',
-            condition: '',
+            condition: { key: '', value: '' },
           });
         }
       }
+      console.log(ruleForm.value.conditionList, 232323);
       /* eslint-enable */
     };
 
@@ -546,7 +555,11 @@ export default {
     // 打开企业选择器
     const handleOpenModal = () => {
       entDialog.value.visible = true;
-      entDialog.value.selectedData = ruleForm.value.entInfo;
+      if (Number(ruleForm.value.entInfo[0].id) < 0) {
+        entDialog.value.selectedData = [];
+      } else {
+        entDialog.value.selectedData = ruleForm.value.entInfo;
+      }
     };
 
     // 打开业务选择器
@@ -556,12 +569,12 @@ export default {
     };
 
     // 渲染企业
-    const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
+    const handleRenderEnt = (arr): string => {
       let res = '';
       for (let i = 0; i < arr.length; i += 1) {
         res += `${arr[i].name}，`;
       }
-      return res.substring(0, res.length - 2);
+      return res.substring(0, res.length - 1);
     };
 
     // 选择业务
@@ -578,21 +591,22 @@ export default {
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
-      const { selectData, visible } = params;
-      if (selectData && selectData.length) {
-        ruleForm.value.entInfo = selectData;
-        ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
+      if (!params.selectData || !params.selectData.length) {
+        ruleForm.value.entInfo = [{ id: '-1', name: '全部企业' }];
+        ruleForm.value.entInfoStr = '全部企业';
+        entDialog.value.visible = params.visible;
+        return;
       }
-      entDialog.value.visible = visible;
+      ruleForm.value.entInfo = params.selectData;
+      ruleForm.value.entInfoStr = handleRenderEnt(params.selectData);
+      entDialog.value.visible = params.visible;
     };
 
     // 选择条件值
     const handleConditionSelect = (params) => {
       const { visible, selectData } = params;
       const { index } = conditionDialog.value;
-      console.log(index, 232332);
       conditionDialog.value.visible = visible;
-      console.log(selectData);
 
       if (selectData) {
         console.log(ruleForm.value);
@@ -611,9 +625,9 @@ export default {
     const handleResourceSelect = (params: any): any => {
       const { selectData, visible, index } = params;
       if (selectData && selectData.length) {
-        const { sourceType, sourceKey, sourceTag } = selectData[0];
+        const { sourceType, id, sourceTag } = selectData[0];
         ruleForm.value.source[index].sourceType.name = sourceType;
-        ruleForm.value.source[index].sourceType.id = sourceKey;
+        ruleForm.value.source[index].sourceType.id = id;
         ruleForm.value.source[index].sourceType.tags = sourceTag;
         handleRenderTags();
       }
@@ -629,7 +643,7 @@ export default {
         ElMessage.error(message);
         return;
       }
-      conditionOptions.value = data.list;
+      conditionOptions.value = data;
     };
 
     // 获取条件值集
@@ -640,16 +654,14 @@ export default {
         ElMessage.error(message);
         return;
       }
-      mainConditionOptions.value = data.list;
+      mainConditionOptions.value = data;
     };
 
     // 新增标签
     const handleAddItem = (type) => {
       const obj = {
         source: {
-          id: '',
           sourceType: {
-            id: '',
             name: '',
             tags: [],
           },
@@ -659,12 +671,10 @@ export default {
           mainType: 'role(角色)',
           mainCondition: '',
           mainValue: '',
-          id: '',
         },
         actionList: {
           sourceType: '',
           sourceId: '',
-          id: '',
           actionType: '',
           action: '',
         },
@@ -730,8 +740,8 @@ export default {
     };
 
     // 保存资源类型
-    const saveResourceType = () => {
-      const result: any = request.post(api.saveResourceType, ruleForm);
+    const saveStrategy = async () => {
+      const result: any = await request.post(api.saveStrategy, ruleForm.value);
       if (!result.success) {
         ElMessage.error(result.message);
         return;
@@ -740,29 +750,75 @@ export default {
       goBack();
     };
 
+    // 根据id获取详情
+    const getDetailById = async () => {
+      const { id } = Route.query;
+      const result: any = await request.post(api.getStrategyDetail, { id });
+      console.log(result.success);
+      if (!result.success) {
+        ElMessage.error(result.message);
+        return;
+      }
+      ruleForm.value = result.data;
+      console.log(result.data);
+      ruleForm.value.businessStr = handleRenderEnt([ruleForm.value.business]);
+      ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
+    };
+
+    const handleChangeCondition = (index) => {
+      ruleForm.value.conditionList[
+        index
+      ].condition.value = conditionOptions.value.filter(
+        (item) => item.id === ruleForm.value.conditionList[index].condition.key,
+      )[0].name;
+    };
+
     // 验证各条数据是否都有填写了数据
     const handleValidateData = () => {
       let flag = true;
       const temp = JSON.parse(JSON.stringify(ruleForm.value));
       delete temp.businessStr;
       delete temp.entInfoStr;
+      console.log(temp, 3223323232);
+      if (!ruleForm.value.source.length) {
+        return false;
+      }
+      if (!ruleForm.value.roleList.length) {
+        return false;
+      }
+      if (!ruleForm.value.actionList.length) {
+        return false;
+      }
       const list = Object.keys(temp);
 
       for (let i = 0; i < list.length; i += 1) {
         if (typeof ruleForm.value[list[i]] === 'object') {
-          if (!ruleForm.value[list[i]].length) {
+          if (list[i] !== 'business' && !ruleForm.value[list[i]].length) {
             flag = false;
             break;
           }
-          for (let j = 0; j < ruleForm.value[list[i]].length; j += 1) {
-            const arr = Object.keys(ruleForm.value[list[i]][j]);
-            for (let o = 0; o < arr.length; o += 1) {
+          if (list[i] === 'business') {
+            const tempArr = Object.keys(ruleForm.value[list[i]]);
+            for (let j = 0; j < tempArr.length; j += 1) {
               if (
-                ruleForm.value[list[i]][j][arr[o]] === 'string' && // eslint-disable-line
-                ruleForm.value[list[i]][j][arr[o]] === ''
+                typeof ruleForm.value.business[tempArr[j]] === 'string' && // eslint-disable-line
+                ruleForm.value.business[tempArr[j]] === ''
               ) {
                 flag = false;
                 break;
+              }
+            }
+          } else {
+            for (let j = 0; j < ruleForm.value[list[i]].length; j += 1) {
+              const arr = Object.keys(ruleForm.value[list[i]][j]);
+              for (let o = 0; o < arr.length; o += 1) {
+                if (
+                  typeof ruleForm.value[list[i]][j][arr[o]] === 'string' && // eslint-disable-line
+                  ruleForm.value[list[i]][j][arr[o]] === ''
+                ) {
+                  flag = false;
+                  break;
+                }
               }
             }
           }
@@ -776,16 +832,30 @@ export default {
       customForm.value.validate((valid) => {
         if (valid && handleValidateData()) {
           console.log(233);
+          saveStrategy();
         } else {
           ElMessage.error('信息填写不完整');
         }
       });
     };
 
+    const handleChangeAction = (index) => {
+      /* eslint-disable */
+      ruleForm.value.actionList[index].sourceType = ruleForm.value.source.find(
+        (item) =>
+          item.sourceType.id === ruleForm.value.actionList[index].sourceId,
+      ).sourceType.name;
+      /* eslint-enable */
+    };
+
     onMounted(async () => {
+      const { id } = Route.query;
       customForm.value.resetFields();
-      await getConditionList();
-      await getMainConditionList();
+      getConditionList();
+      getMainConditionList();
+      if (id) {
+        getDetailById();
+      }
     });
 
     return {
@@ -806,7 +876,6 @@ export default {
       handleEmptyValidate,
       handleAddItem,
       goBack,
-      saveResourceType,
       handleSave,
       handleResourceSelect,
       handleSelectResource,
@@ -815,6 +884,8 @@ export default {
       handleBusinessSelect,
       handleSelectCondition,
       handleConditionSelect,
+      handleChangeAction,
+      handleChangeCondition,
     };
   },
 };
