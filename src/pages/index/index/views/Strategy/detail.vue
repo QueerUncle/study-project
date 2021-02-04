@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-04 09:37:28
+ * @Last Modified time: 2021-02-04 13:59:31
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -328,7 +328,7 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
               prop="address"
               label="动作类型"
             >
@@ -338,7 +338,7 @@
                   placeholder="自定动作类型"
                 />
               </template>
-            </el-table-column>
+            </el-table-column>-->
             <el-table-column
               prop="address"
               label="动作"
@@ -665,7 +665,7 @@ export default {
           mainValue: '',
         },
         actionList: {
-          sourceType: '',
+          sourceType: 'name',
           sourceId: '',
           actionType: '',
           action: '',
