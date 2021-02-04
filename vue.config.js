@@ -44,6 +44,7 @@ module.exports = {
     index: 'index-index.html',
     https: false,
     proxy: 'http://10.80.2.11:8000/', // 运营管理平台
+    // proxy: 'http://10.80.12.101:8000/', // 裴姐
     // proxy: 'http://10.80.12.204:8300/', // 大涛
     // proxy: 'http://10.80.2.36:8300/', // 韩工
     // proxy: 'http:// 10.80.12.152:8300/', // 刘涛

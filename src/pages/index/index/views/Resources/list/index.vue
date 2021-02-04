@@ -66,7 +66,7 @@
           @click="handleCurrentChange(1)">查找</el-button>
       </div>
       <div class="content-table-wrap">
-        <el-table :data="resourcesList" :max-height = "400" style="width: 100%">
+        <el-table :data="resourcesList" :max-height = "500" style="width: 100%">
             <el-table-column label="序号" width="80">
               <template #default="scope">
                 <span>{{scope.$index + 1}}</span>
@@ -77,6 +77,13 @@
             <el-table-column prop="sourceTag" label="资源标签">
               <template #default="{ row }">
                 <span>{{getResourcesTagStr(row.sourceTag)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="entInfo" label="企业名称">
+              <template #default="{ row }">
+                <span>
+                  {{row.entInfo.length && row.entInfo[0].id > -1 ? row.entInfo[0].name : ''}}
+                </span>
               </template>
             </el-table-column>
             <el-table-column width="100" label="操作">
