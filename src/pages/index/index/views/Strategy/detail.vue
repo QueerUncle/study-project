@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-03 17:02:07
+ * @Last Modified time: 2021-02-04 09:37:28
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -418,8 +418,6 @@ export default {
     const Router = useRouter();
     const Route = useRoute();
 
-    console.log(Route);
-
     // 企业选择器参数
     const entDialog = ref({
       singleSelect: false,
@@ -504,7 +502,6 @@ export default {
       /* eslint-disable */
       const list = ruleForm.value.source;
       let res = list[0].sourceType.tags;
-      console.log(res, 3223323232);
       for (let i = 1; i < list.length; i += 1) {
         res = [
           ...new Set(
@@ -516,7 +513,6 @@ export default {
           ),
         ];
       }
-      console.log(res, 3223323);
 
       for (let i = 0; i < ruleForm.value.conditionList.length; i += 1) {
         if (
@@ -541,14 +537,12 @@ export default {
           });
         }
       }
-      console.log(ruleForm.value.conditionList, 232323);
       /* eslint-enable */
     };
 
     // 打开条件值选择弹窗
     const handleSelectCondition = (index) => {
       conditionDialog.value.visible = true;
-      console.log(index);
       conditionDialog.value.index = index;
     };
 
@@ -609,8 +603,6 @@ export default {
       conditionDialog.value.visible = visible;
 
       if (selectData) {
-        console.log(ruleForm.value);
-
         // eslint-disable-next-line
         ruleForm.value.conditionList[index].conditionValue +=
           selectData[0].name;
@@ -784,7 +776,6 @@ export default {
       const temp = JSON.parse(JSON.stringify(ruleForm.value));
       delete temp.businessStr;
       delete temp.entInfoStr;
-      console.log(temp, 3223323232);
       if (!ruleForm.value.source.length) {
         return false;
       }
@@ -836,7 +827,6 @@ export default {
     const handleSave = () => {
       customForm.value.validate((valid) => {
         if (valid && handleValidateData()) {
-          console.log(233);
           saveStrategy();
         } else {
           ElMessage.error('信息填写不完整');
