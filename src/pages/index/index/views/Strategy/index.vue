@@ -277,7 +277,7 @@ export default {
     const handleBusinessSelect = (params) => {
       const { selectData, visible } = params;
       if (selectData) {
-        searchObj.business = selectData[0]; // eslint-disable-line
+        [searchObj.business] = selectData;
         searchObj.businessStr = handleRenderEnt([searchObj.business]);
       }
       businessDialog.value.visible = visible;
@@ -362,6 +362,4 @@ export default {
 };
 </script>
 
-<style scoped lang='less'>
-@import '../Resources/list/index.less';
-</style>
+<style scoped lang='less' src='../Resources/list/index.less'></style>

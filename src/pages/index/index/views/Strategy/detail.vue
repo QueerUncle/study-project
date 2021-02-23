@@ -886,8 +886,8 @@ export default {
 };
 </script>
 
-<style scoped lang='less'>
-@import '../Resources/edit/index.less';
+<style scoped lang='less' src='../Resources/edit/index.less'></style>
+<style scoped lang='less' >
 /deep/.table-header {
   th,
   tr {
