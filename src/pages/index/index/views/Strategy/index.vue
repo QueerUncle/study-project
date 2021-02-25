@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 09:46:55
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-03 10:00:26
+ * @Last Modified time: 2021-02-03 15:07:04
  */
 
 <template>
@@ -82,7 +82,7 @@
       <div class="content-table-wrap">
         <el-table
           :data="strategyList"
-          :max-height="400"
+          :max-height="550"
           style="width: 100%"
         >
           <el-table-column
@@ -214,7 +214,7 @@ export default {
     const searchObj = reactive({
       business: {}, // 业务
       businessStr: '',
-      entInfo: {}, // 企业信息
+      entInfo: { id: '', name: '' }, // 企业信息
       description: '', // 资源类型
       pageSize: 10, // 每页多少条
       pageNum: 1, // 当前页
@@ -230,7 +230,7 @@ export default {
       for (let i = 0; i < arr.length; i += 1) {
         res += `${arr[i].name}，`;
       }
-      return res.substring(0, res.length - 2);
+      return res.substring(0, res.length - 1);
     };
 
     // 打开业务选择器
@@ -243,9 +243,11 @@ export default {
     const getStrategyList = async () => {
       /* eslint-disable */
       searchObj.description = searchKey.value || '';
+      const reqbody = JSON.parse(JSON.stringify(searchObj));
+      reqbody.entInfo = searchObj.entInfo.id ? [searchObj.entInfo] : [];
 
       /* eslint-enable */
-      const result: any = await Http.post(Api.getStrategyList, searchObj);
+      const result: any = await Http.post(Api.getStrategyList, reqbody);
       if (!result.success) {
         ElMessage.error(result.message);
         return;
@@ -266,14 +268,16 @@ export default {
       const { selectData, visible } = params;
 
       entDialog.value.visible = visible;
-      [searchObj.entInfo] = selectData;
+      if (selectData && selectData.length) {
+        [searchObj.entInfo] = selectData;
+      }
     };
 
     // 选择业务
     const handleBusinessSelect = (params) => {
       const { selectData, visible } = params;
       if (selectData) {
-        searchObj.business = selectData[0]; // eslint-disable-line
+        [searchObj.business] = selectData;
         searchObj.businessStr = handleRenderEnt([searchObj.business]);
       }
       businessDialog.value.visible = visible;
@@ -358,6 +362,4 @@ export default {
 };
 </script>
 
-<style scoped lang='less'>
-@import '../Resources/list/index.less';
-</style>
+<style scoped lang='less' src='../Resources/list/index.less'></style>

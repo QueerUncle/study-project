@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-02 13:40:40
+ * @Last Modified time: 2021-02-03 14:49:24
  */
 <template>
   <div class="ent-select">
@@ -20,7 +20,7 @@
         @change="handleSelectItem"
       >
         <el-option
-          :label="item.name"
+          :label="item.id"
           :value="item.id"
           :key="item.id"
           v-for="item in conditionOptions"
@@ -70,9 +70,9 @@ export default {
           ElMessage.error(message);
           return;
         }
-        const { list } = data;
+
         // 获取回数据后，根据选中的内容设置选中
-        conditionOptions.value = list;
+        conditionOptions.value = data;
       } catch (error) {
         ElMessage.error(error);
       }
@@ -97,9 +97,7 @@ export default {
 
     const handleSelectItem = (value) => {
       selectEnt.value[0].id = value;
-      selectEnt.value[0].name = conditionOptions.value.find(
-        (item) => item.id === value,
-      ).name;
+      selectEnt.value[0].name = value;
     };
 
     onMounted(async () => {

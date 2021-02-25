@@ -2,12 +2,12 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-01-29 13:53:16
+ * @Last Modified time: 2021-02-03 14:23:44
  */
 <template>
   <div class="ent-select">
     <el-dialog
-      title="选择企业"
+      title="选择资源"
       :model-value="resourceDialog.visible"
       destroy-on-close
       width="600px"
@@ -98,6 +98,11 @@ export default {
       const reqBody = {
         pageNum: pageNum.value,
         pageSize,
+        business: {}, // 业务
+        businessStr: '', // 业务str
+        entInfo: [], // 企业信息
+        sourceType: '', // 资源类型
+        sourceKey: '', // 资源类型key
       };
       try {
         // eslint-disable-next-line
