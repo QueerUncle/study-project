@@ -822,7 +822,7 @@ export default {
 
 <style scoped lang='less'>
 @import '../Resources/edit/index.less';
-::v-deep .table-header {
+:deep(.table-header) {
   th,
   tr {
     background-color: #f6f6f6;

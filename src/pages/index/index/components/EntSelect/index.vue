@@ -204,7 +204,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-::v-deep td.select-wrap {
+:deep(td.select-wrap) {
   display: flex;
   justify-content: center;
   .el-radio__label {
@@ -216,7 +216,7 @@ export default {
   justify-content: flex-end;
   margin-top: 10px;
 }
-::v-deep .el-dialog__body {
+:deep(.el-dialog__body) {
   padding: 15px 20px;
 }
 </style>
