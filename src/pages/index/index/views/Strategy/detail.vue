@@ -886,15 +886,9 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
-<style scoped lang='less'>
-@import '../Resources/edit/index.less';
-:deep(.table-header) {
-=======
 <style scoped lang='less' src='../Resources/edit/index.less'></style>
 <style scoped lang='less' >
-/deep/.table-header {
->>>>>>> efc28937ce0cb2c229c4e06cec85ee311dd5252a
+:deep(.table-header) {
   th,
   tr {
     background-color: #f6f6f6;
