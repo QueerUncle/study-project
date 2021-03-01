@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-03 14:23:44
+ * @Last Modified time: 2021-03-01 17:11:30
  */
 <template>
   <div class="ent-select">
@@ -100,7 +100,7 @@ export default {
         pageSize,
         business: {}, // 业务
         businessStr: '', // 业务str
-        entInfo: [], // 企业信息
+        entInfo: props.resourceDialog.entInfo, // 企业信息
         sourceType: '', // 资源类型
         sourceKey: '', // 资源类型key
       };

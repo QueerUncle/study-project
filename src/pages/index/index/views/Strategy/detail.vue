@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 10:36:15
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-04 13:59:31
+ * @Last Modified time: 2021-03-01 17:16:19
  */
 <template>
   <div class="resources-edit-wrap custom-class-wrap">
@@ -430,6 +430,7 @@ export default {
       singleSelect: true,
       visible: false,
       index: -1,
+      entInfo: [],
     });
 
     // 业务选择器参数
@@ -594,6 +595,10 @@ export default {
       ruleForm.value.entInfo = params.selectData;
       ruleForm.value.entInfoStr = handleRenderEnt(params.selectData);
       entDialog.value.visible = params.visible;
+      ruleForm.value.actionList = [];
+      ruleForm.value.roleList = [];
+      ruleForm.value.conditionList = [];
+      ruleForm.value.source = [];
     };
 
     // 选择条件值
@@ -612,6 +617,7 @@ export default {
     const handleSelectResource = (index) => {
       resourceDialog.value.visible = true;
       resourceDialog.value.index = index;
+      resourceDialog.value.entInfo = ruleForm.value.entInfo;
     };
 
     const handleResourceSelect = (params: any): any => {
@@ -667,7 +673,7 @@ export default {
         actionList: {
           sourceType: 'name',
           sourceId: '',
-          actionType: '',
+          actionType: '0',
           action: '',
         },
       };
@@ -776,51 +782,119 @@ export default {
       const temp = JSON.parse(JSON.stringify(ruleForm.value));
       delete temp.businessStr;
       delete temp.entInfoStr;
+
       if (!ruleForm.value.source.length) {
         return false;
       }
-      if (!ruleForm.value.roleList.length) {
+      if (
+        !ruleForm.value.roleList.length && // eslint-disable-line
+        !ruleForm.value.conditionList.length
+      ) {
         return false;
       }
       if (!ruleForm.value.actionList.length) {
         return false;
       }
-      const list = Object.keys(temp);
+      /* eslint-disable */
 
+      // const { roleList, conditionList, business } = temp;
+
+      // 判断企业，资源和动作
+      const list = ['entInfo', 'source', 'actionList'];
       for (let i = 0; i < list.length; i += 1) {
-        if (typeof ruleForm.value[list[i]] === 'object') {
-          if (list[i] !== 'business' && !ruleForm.value[list[i]].length) {
-            flag = false;
-            break;
-          }
-          if (list[i] === 'business') {
-            const tempArr = Object.keys(ruleForm.value[list[i]]);
-            for (let j = 0; j < tempArr.length; j += 1) {
-              if (
-                typeof ruleForm.value.business[tempArr[j]] === 'string' && // eslint-disable-line
-                ruleForm.value.business[tempArr[j]] === ''
-              ) {
-                flag = false;
-                break;
-              }
-            }
-          } else {
-            for (let j = 0; j < ruleForm.value[list[i]].length; j += 1) {
-              const arr = Object.keys(ruleForm.value[list[i]][j]);
-              for (let o = 0; o < arr.length; o += 1) {
-                if (
-                  typeof ruleForm.value[list[i]][j][arr[o]] === 'string' && // eslint-disable-line
-                  ruleForm.value[list[i]][j][arr[o]] === ''
-                ) {
-                  flag = false;
-                  break;
-                }
-              }
+        for (let j = 0; j < ruleForm.value[list[i]].length; j += 1) {
+          const arr = Object.keys(ruleForm.value[list[i]][j]);
+          for (let o = 0; o < arr.length; o += 1) {
+            if (
+              typeof ruleForm.value[list[i]][j][arr[o]] === 'string' &&
+              ruleForm.value[list[i]][j][arr[o]] === ''
+            ) {
+              flag = false;
+              break;
             }
           }
         }
       }
+
+      // 判断业务
+      const tempArr = Object.keys(ruleForm.value.business);
+      for (let j = 0; j < tempArr.length; j += 1) {
+        if (
+          typeof ruleForm.value.business[tempArr[j]] === 'string' &&
+          ruleForm.value.business[tempArr[j]] === ''
+        ) {
+          flag = false;
+          break;
+        }
+      }
+
+      // 判断条件
+      if (
+        ruleForm.value.roleList.length &&
+        !ruleForm.value.conditionList.length
+      ) {
+        for (let j = 0; j < ruleForm.value.roleList.length; j += 1) {
+          const arr = Object.keys(ruleForm.value.roleList[j]);
+          for (let o = 0; o < arr.length; o += 1) {
+            if (
+              typeof ruleForm.value.roleList[j][arr[o]] === 'string' &&
+              ruleForm.value.roleList[j][arr[o]] === ''
+            ) {
+              flag = false;
+              break;
+            }
+          }
+        }
+      }
+      if (
+        !ruleForm.value.roleList.length &&
+        ruleForm.value.conditionList.length
+      ) {
+        for (let j = 0; j < ruleForm.value.conditionList.length; j += 1) {
+          const arr = Object.keys(ruleForm.value.conditionList[j]);
+          for (let o = 0; o < arr.length; o += 1) {
+            if (
+              typeof ruleForm.value.conditionList[j][arr[o]] === 'string' &&
+              ruleForm.value.conditionList[j][arr[o]] === ''
+            ) {
+              flag = false;
+              break;
+            }
+          }
+        }
+      }
+      if (
+        ruleForm.value.roleList.length &&
+        ruleForm.value.conditionList.length
+      ) {
+        for (let j = 0; j < ruleForm.value.conditionList.length; j += 1) {
+          const arr = Object.keys(ruleForm.value.conditionList[j]);
+          for (let o = 0; o < arr.length; o += 1) {
+            if (
+              typeof ruleForm.value.conditionList[j][arr[o]] === 'string' &&
+              ruleForm.value.conditionList[j][arr[o]] === ''
+            ) {
+              flag = false;
+              break;
+            }
+          }
+        }
+        for (let j = 0; j < ruleForm.value.roleList.length; j += 1) {
+          const arr = Object.keys(ruleForm.value.roleList[j]);
+          for (let o = 0; o < arr.length; o += 1) {
+            if (
+              typeof ruleForm.value.roleList[j][arr[o]] === 'string' &&
+              ruleForm.value.roleList[j][arr[o]] === ''
+            ) {
+              flag = false;
+              break;
+            }
+          }
+        }
+      }
+      console.log(temp, flag);
       return flag;
+      /* eslint-enable */
     };
 
     // 保存

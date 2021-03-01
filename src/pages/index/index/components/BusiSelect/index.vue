@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-03 09:58:34
+ * @Last Modified time: 2021-03-01 17:08:22
  */
 <template>
   <div class="ent-select">
@@ -106,7 +106,6 @@ export default {
 
     const setCheckedKeys = (selectedData) => {
       const list = selectedData.map((item) => item.id);
-      console.log(list);
       tree.value.setCheckedKeys(list);
     };
 
@@ -114,8 +113,6 @@ export default {
       const { businessDialog } = props;
       const { singleSelect } = businessDialog;
       if (value.children) {
-        console.log(selectEnt, 111232323);
-
         setCheckedKeys(selectEnt);
         return;
       }
@@ -134,7 +131,6 @@ export default {
           selectEnt.push(value);
         }
       }
-      console.log(selectEnt, 232323);
 
       setCheckedKeys(selectEnt);
     };

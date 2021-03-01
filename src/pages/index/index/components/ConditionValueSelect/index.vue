@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-03 14:49:24
+ * @Last Modified time: 2021-03-01 17:08:07
  */
 <template>
   <div class="ent-select">
@@ -91,7 +91,6 @@ export default {
           }
         : { visible: false };
       /* eslint-enable */
-      console.log(param);
       context.emit('handleConditionSelect', param);
     };
 
@@ -103,7 +102,6 @@ export default {
     onMounted(async () => {
       const { conditionDialog } = props;
       const { selectedData } = conditionDialog;
-      console.log(toRaw(selectedData), 232323);
       if (toRaw(selectedData).length) {
         selectEnt.value = selectedData;
       } else {
