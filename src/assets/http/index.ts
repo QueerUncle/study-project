@@ -53,7 +53,7 @@ Http.interceptors.response.use(
     }
     if (response.data.code === 400) {
       // eslint-disable-line
-      (<any>ElMessage).error(response.data.msg || response.data.ElMessage); // eslint-disable-line
+      (<any>ElMessage).error(response.data.msg || response.data.message || ''); // eslint-disable-line
       return response.data;
     }
     if (response.data.errorUrl) {

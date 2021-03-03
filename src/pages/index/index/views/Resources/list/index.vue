@@ -241,14 +241,17 @@ export default {
 
     // 打开企业选择器
     const handleOpenModal = () => {
-      entDialog.value.selectedData = searchObj.entInfo;
+      entDialog.value.selectedData = [...searchObj.entInfo];
       entDialog.value.visible = true;
     };
 
     // 选择企业
     const handleEntSelect = (params: any): any => {
-      searchObj.entInfo = params.selectData; // eslint-disable-line
-      entDialog.value.visible = params.visible;
+      const { selectData, visible } = params;
+      entDialog.value.visible = visible;
+      if (selectData && selectData.length) {
+        searchObj.entInfo = selectData;
+      }
     };
 
     // 打开业务选择器
@@ -260,7 +263,7 @@ export default {
     const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
       let res = '';
       for (let i = 0; i < arr.length; i += 1) {
-        res += `${arr[i].name}，`;
+        res += `${arr[i].name || ''}，`;
       }
       return res.substring(0, res.length - 1);
     };
@@ -269,7 +272,7 @@ export default {
     const handleBusinessSelect = (params) => {
       const { selectData, visible } = params;
       if (selectData) {
-        searchObj.business = selectData[0]; // eslint-disable-line
+        searchObj.business = selectData.length ? selectData[0] : []; // eslint-disable-line
         searchObj.businessStr = handleRenderEnt([searchObj.business]);
       }
       businessDialog.value.visible = visible;
