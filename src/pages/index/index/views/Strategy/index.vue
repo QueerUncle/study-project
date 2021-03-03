@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-28 09:46:55
  * @Last Modified by: libf
- * @Last Modified time: 2021-02-03 15:07:04
+ * @Last Modified time: 2021-03-03 10:59:26
  */
 
 <template>
@@ -261,6 +261,7 @@ export default {
     // 打开企业选择器
     const handleOpenModal = () => {
       entDialog.value.visible = true;
+      entDialog.value.selectedData = [searchObj.entInfo];
     };
 
     // 选择企业
@@ -276,9 +277,11 @@ export default {
     // 选择业务
     const handleBusinessSelect = (params) => {
       const { selectData, visible } = params;
-      if (selectData) {
+      if (selectData && selectData.length) {
         [searchObj.business] = selectData;
         searchObj.businessStr = handleRenderEnt([searchObj.business]);
+      } else {
+        searchObj.businessStr = '';
       }
       businessDialog.value.visible = visible;
     };

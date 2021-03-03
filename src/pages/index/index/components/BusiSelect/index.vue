@@ -2,7 +2,7 @@
  * @Author: libf
  * @Date: 2021-01-27 13:37:24
  * @Last Modified by: libf
- * @Last Modified time: 2021-03-01 17:08:22
+ * @Last Modified time: 2021-03-03 10:16:54
  */
 <template>
   <div class="ent-select">
@@ -173,5 +173,7 @@ export default {
 }
 :deep(.el-dialog__body) {
   padding: 15px 20px;
+  height: 400px;
+  overflow: auto;
 }
 </style>
