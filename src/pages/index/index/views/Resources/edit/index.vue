@@ -233,7 +233,11 @@ export default {
     const handleRenderEnt = (arr: Partial<EntItem>[]): string => {
       let res = '';
       for (let i = 0; i < arr.length; i += 1) {
+        // if (arr[i].id === '-1') {
+        //   res += '全部企业，';
+        // } else {
         res += `${arr[i].name}，`;
+        // }
       }
       return res.substring(0, res.length - 1);
     };
@@ -318,15 +322,12 @@ export default {
       }
       Object.assign(ruleForm.value, result.data);
       if (ruleForm.value.entInfo.length) {
-        let str = '';
-        for (let i = 0; i < ruleForm.value.entInfo.length; i += 1) {
-          str += `${ruleForm.value.entInfo[i].name}，`;
-        }
-        ruleForm.value.entInfoStr = str;
+        ruleForm.value.entInfoStr = handleRenderEnt(ruleForm.value.entInfo);
       }
       if (ruleForm.value.business.length) {
         ruleForm.value.businessStr = handleRenderEnt(ruleForm.value.business);
       }
+      // customForm.value.resetFields();
     };
 
     onMounted(() => {
