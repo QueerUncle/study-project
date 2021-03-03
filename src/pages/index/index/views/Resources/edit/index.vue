@@ -235,7 +235,7 @@ export default {
       for (let i = 0; i < arr.length; i += 1) {
         res += `${arr[i].name}，`;
       }
-      return res.substring(0, res.length - 2);
+      return res.substring(0, res.length - 1);
     };
 
     // 选择业务
