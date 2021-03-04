@@ -22,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'ResourcesEdit',
     component: () => import('../views/Resources/edit/index.vue'),
   },
+  {
+    path: '/test-index',
+    name: 'TestIndex',
+    component: () => import('../views/Test/TestIndex.vue'),
+  },
 ];
 
 const router = createRouter({
