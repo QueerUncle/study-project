@@ -293,7 +293,7 @@ export default defineComponent({
       for (let i = 0; i < sourceTag.length; i += 1) {
         str += `${sourceTag[i].tagName}：${sourceTag[i].tagType}，`;
       }
-      return str;
+      return str.substring(0, str.length - 1);
     };
 
     // table编辑
