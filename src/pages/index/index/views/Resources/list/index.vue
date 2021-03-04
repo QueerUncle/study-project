@@ -122,7 +122,9 @@
 </template>
 
 <script lang='ts'>
-import { onMounted, reactive, ref } from 'vue';
+import {
+  onMounted, reactive, ref, defineComponent,
+} from 'vue';
 // import {
 //   onMounted, reactive, ref, getCurrentInstance,
 // } from 'vue';
@@ -133,7 +135,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import EntSelect from '../../../components/EntSelect/index.vue';
 import BusiSelect from '../../../components/BusiSelect/index.vue';
 
-export default {
+export default defineComponent({
   name: 'ResourcesList',
   components: {
     EntSelect,
@@ -362,7 +364,7 @@ export default {
       deleteSource,
     };
   },
-};
+});
 </script>
 
 <style scoped lang='less'>
