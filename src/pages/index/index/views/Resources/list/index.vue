@@ -123,6 +123,9 @@
 
 <script lang='ts'>
 import { onMounted, reactive, ref } from 'vue';
+// import {
+//   onMounted, reactive, ref, getCurrentInstance,
+// } from 'vue';
 import { useRouter } from 'vue-router';
 import { Http } from '@/assets/http';
 import Api from '@/pages/index/index/utils/api';
@@ -137,6 +140,9 @@ export default {
     BusiSelect,
   },
   setup() {
+    // console.log((getCurrentInstance() as any).ctx, '222222222');
+    // const http: any = (getCurrentInstance() as any).ctx.$Http;
+    // console.log(http, 'httphttphttp');
     const Router = useRouter();
     // 企业选择器参数
     const entDialog = ref({
