@@ -14,9 +14,11 @@
         v-for="(item, index) in list"
         :key = "index"
         :style = "{
-          left: `${scaleq ? scaleq * item.left : left}px`,
-          top: `${scaleq ? scaleq * item.top : top}px`,
-          transform: `${scaleq ? `scale(${scaleq})` : false}`
+          width: `${scaleq ? scaleq * item.width : item.width}px`,
+          height: `${scaleq ? scaleq * item.height : item.height}px`,
+          left: `${scaleq ? scaleq * item.left : item.left}px`,
+          top: `${scaleq ? scaleq * item.top : item.top}px`,
+          // transform: `${scaleq ? `scale(${scaleq})` : false}`
         }"
         class = "item-wrap" />
     </div>
@@ -25,8 +27,10 @@
         v-for="(item, index) in list"
         :key = "index"
         :style = "{
-          left: `${scaleq ? scaleq * item.left : item.left}px`,
-          top: `${scaleq ? scaleq * item.top : item.top}px`,
+          width: `${item.width}px`,
+          height: `${item.height}px`,
+          left: `${item.left}px`,
+          top: `${item.top}px`,
         }"
         class = "item-wrap" />
     </div>
@@ -95,8 +99,6 @@ export default {
   .item-wrap{
     position: absolute;
     background: #409EFF;
-    width: 100px;
-    height: 100px;
   }
 }
 </style>
