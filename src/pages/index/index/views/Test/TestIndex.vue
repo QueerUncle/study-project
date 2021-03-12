@@ -23,16 +23,19 @@
         class = "item-wrap" />
     </div>
     <div class = "box-old-wrap">
-      <div
-        v-for="(item, index) in list"
-        :key = "index"
-        :style = "{
-          width: `${item.width}px`,
-          height: `${item.height}px`,
-          left: `${item.left}px`,
-          top: `${item.top}px`,
-        }"
-        class = "item-wrap" />
+<!--      <div-->
+<!--        v-for="(item, index) in list"-->
+<!--        :key = "index"-->
+<!--        :style = "{-->
+<!--          width: `${item.width}px`,-->
+<!--          height: `${item.height}px`,-->
+<!--          left: `${item.left}px`,-->
+<!--          top: `${item.top}px`,-->
+<!--        }"-->
+<!--        class = "item-wrap" />-->
+      <div class = "cbim-button-error" style="width: 100px;height: 100px;margin: 10px"></div>
+      <div class = "cbim-button-success" style="width: 100px;height: 100px;margin: 10px"></div>
+      <div class = "cbim-button-cbim" style="width: 100px;height: 100px;margin: 10px"></div>
     </div>
   </div>
 </template>
@@ -101,4 +104,16 @@ export default {
     background: #409EFF;
   }
 }
+
+@button-error-color:red;
+@button-success-color:#409EFF;
+@button-cbim-color:black;
+@selectColor: error , success , cbim;
+each(@selectColor, {
+  .cbim-button-@{value} {
+    @var: ~'button-@{value}-color';
+    background:@@var;
+  }
+})
+
 </style>
