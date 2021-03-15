@@ -623,8 +623,10 @@ export default {
     const handleResourceSelect = (params: any): any => {
       const { selectData, visible, index } = params;
       if (selectData && selectData.length) {
-        const { sourceType, id, sourceTag } = selectData[0];
-        ruleForm.value.source[index].sourceType.name = sourceType;
+        // const { sourceType, id, sourceTag } = selectData[0];
+        const { sourceKey, id, sourceTag } = selectData[0];
+        // ruleForm.value.source[index].sourceType.name = sourceType;
+        ruleForm.value.source[index].sourceType.name = sourceKey;
         ruleForm.value.source[index].sourceType.id = id;
         ruleForm.value.source[index].sourceType.tags = sourceTag;
         handleRenderTags();
