@@ -36,6 +36,7 @@
       <div class = "cbim-button-error" style="width: 100px;height: 100px;margin: 10px"></div>
       <div class = "cbim-button-success" style="width: 100px;height: 100px;margin: 10px"></div>
       <div class = "cbim-button-cbim" style="width: 100px;height: 100px;margin: 10px"></div>
+      <CustomButton @click = "handleButtonClick" />
     </div>
   </div>
 </template>
@@ -45,8 +46,11 @@ import {
   onMounted, reactive, ref, getCurrentInstance,
 } from 'vue';
 
+import CustomButton from './CustomButton.vue';
+
 export default {
   name: 'TestIndex',
+  components: { CustomButton },
   setup() {
     console.log(getCurrentInstance());
     const list = reactive([
@@ -68,6 +72,9 @@ export default {
     console.log(list);
     const scaleq = ref(10);
     console.log(scaleq);
+    const handleButtonClick = (event) => {
+      console.log(event);
+    };
     onMounted(() => {
       if (document.body.clientWidth > 1440) {
         scaleq.value = document.body.clientWidth / 1440;
@@ -77,6 +84,7 @@ export default {
     return {
       scaleq,
       list,
+      handleButtonClick,
     };
   },
 };
