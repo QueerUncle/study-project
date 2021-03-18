@@ -504,8 +504,9 @@ export default {
       const obj = {};
       const newAry = [];
       for (let i = 0; i < source.length; i += 1) {
-        if (!obj[source[i].id]) {
-          obj[source[i].id] = source[i];
+        const { sourceType } = source[i];
+        if (!obj[sourceType.id]) {
+          obj[sourceType.id] = source[i];
           newAry.push(source[i]);
         }
       }
