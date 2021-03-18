@@ -323,7 +323,7 @@
                     :label="item.sourceType.name"
                     :value="item.sourceType.id"
                     :key="item.sourceType.id"
-                    v-for="item in ruleForm.source"
+                    v-for="item in handleActiveResources"
                   ></el-option>
                 </el-select>
               </template>
@@ -396,7 +396,7 @@
 
 <script lang='ts'>
 /* eslint-disable */
-import { onMounted, ref, toRaw } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Http as request } from '@/assets/http/';
 import api from '@/pages/index/index/utils/api';
@@ -497,6 +497,20 @@ export default {
         { required: true, message: '请选择所属企业', trigger: 'change' },
       ],
     });
+
+    // 处理新增动作->资源类型去重
+    const handleActiveResources = computed(() => {
+      const { source } = ruleForm.value;
+      const obj = {};
+      const newAry = [];
+      for (let i = 0; i < source.length; i += 1) {
+        if (!obj[source[i].id]) {
+          obj[source[i].id] = source[i];
+          newAry.push(source[i]);
+        }
+      }
+      return newAry;
+    })
 
     // 处理交集
     const handleRenderTags = () => {
@@ -957,6 +971,7 @@ export default {
       handleConditionSelect,
       handleChangeAction,
       handleChangeCondition,
+      handleActiveResources,
     };
   },
 };

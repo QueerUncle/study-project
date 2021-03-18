@@ -10,29 +10,31 @@
 <template>
   <div class="test-wrap">
     <div class = "box-new-wrap">
-      <div
-        v-for="(item, index) in list"
-        :key = "index"
-        :style = "{
-          width: `${scaleq ? scaleq * item.width : item.width}px`,
-          height: `${scaleq ? scaleq * item.height : item.height}px`,
-          left: `${scaleq ? scaleq * item.left : item.left}px`,
-          top: `${scaleq ? scaleq * item.top : item.top}px`,
-          // transform: `${scaleq ? `scale(${scaleq})` : false}`
-        }"
-        class = "item-wrap" />
+            <div
+              v-for="(item, index) in list"
+              :key = "index"
+              :style = "{
+                width: `${scaleq ? scaleq * item.width : item.width}px`,
+                height: `${scaleq ? scaleq * item.height : item.height}px`,
+                left: `${scaleq ? scaleq * item.left : item.left}px`,
+                top: `${scaleq ? scaleq * item.top : item.top}px`,
+                // transform: `${scaleq ? `scale(${scaleq})` : false}`
+              }"
+              class = "item-wrap" />
+      <div style="padding: 20px;width: 100%;height: 100%">
+      </div>
     </div>
     <div class = "box-old-wrap">
-<!--      <div-->
-<!--        v-for="(item, index) in list"-->
-<!--        :key = "index"-->
-<!--        :style = "{-->
-<!--          width: `${item.width}px`,-->
-<!--          height: `${item.height}px`,-->
-<!--          left: `${item.left}px`,-->
-<!--          top: `${item.top}px`,-->
-<!--        }"-->
-<!--        class = "item-wrap" />-->
+      <!--      <div-->
+      <!--        v-for="(item, index) in list"-->
+      <!--        :key = "index"-->
+      <!--        :style = "{-->
+      <!--          width: `${item.width}px`,-->
+      <!--          height: `${item.height}px`,-->
+      <!--          left: `${item.left}px`,-->
+      <!--          top: `${item.top}px`,-->
+      <!--        }"-->
+      <!--        class = "item-wrap" />-->
       <div class = "cbim-button-error" style="width: 100px;height: 100px;margin: 10px"></div>
       <div class = "cbim-button-success" style="width: 100px;height: 100px;margin: 10px"></div>
       <div class = "cbim-button-cbim" style="width: 100px;height: 100px;margin: 10px"></div>
@@ -46,7 +48,7 @@ import {
   onMounted, reactive, ref, getCurrentInstance,
 } from 'vue';
 
-import CustomButton from './CustomButton.vue';
+import CustomButton from '../components/CustomButton.vue';
 
 export default {
   name: 'TestIndex',
@@ -69,7 +71,6 @@ export default {
         top: 12,
       },
     ]);
-    console.log(list);
     const scaleq = ref(10);
     console.log(scaleq);
     const handleButtonClick = (event) => {
