@@ -149,6 +149,10 @@
               <template #default="{ $index }">
                 <div class="active-wrap">
                   <span
+                    @click="handleCopyItem('source', $index)"
+                    class="active-item-wrap"
+                  >复制</span>
+                  <span
                     @click="handleDeleteValidate('source', $index)"
                     class="active-item-wrap"
                   >删除</span>
@@ -517,6 +521,7 @@ export default {
     const handleRenderTags = () => {
       /* eslint-disable */
       const list = ruleForm.value.source;
+      if(!list || !list.length) return;
       let res = list[0].sourceType.tags;
       for (let i = 1; i < list.length; i += 1) {
         res = [
@@ -677,6 +682,7 @@ export default {
       const obj = {
         source: {
           sourceType: {
+            id: '',
             name: '',
             tags: [],
           },
@@ -694,9 +700,9 @@ export default {
           action: '',
         },
       };
-      if (type === 'source') {
-        handleSelectResource(ruleForm.value.source.length);
-      }
+      // if (type === 'source') {
+      //   handleSelectResource(ruleForm.value.source.length);
+      // }
       if (type === 'actionList') {
         if (!ruleForm.value.source.length) {
           ElMessage.error('请先选择资源');
