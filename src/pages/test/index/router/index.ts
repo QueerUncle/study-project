@@ -12,6 +12,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'TreeTem',
     component: () => import('../views/TreeTemplate.vue'),
   },
+  {
+    path: '/VUE3Test',
+    name: 'VUE3Test',
+    component: () => import('../views/VUE3Test.vue'),
+  },
 ];
 
 const router = createRouter({
