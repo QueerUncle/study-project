@@ -78,6 +78,33 @@ export default {
     console.log(dddd);
     dddd.splice(0, 1);
     console.log(dddd);
+    const oldObj = {
+      a: 1,
+      b: 2,
+    };
+    const newDataAry = [
+      {
+        key: 'q',
+        name: 'a',
+      },
+      {
+        key: 'a',
+        name: 'a',
+      },
+    ];
+
+    const newAry = [];
+    const copyObj = [];
+    for (let i = 0; i < newDataAry.length; i += 1) {
+      copyObj.push(newDataAry[i].key);
+    }
+    Object.keys(oldObj).forEach((item) => {
+      if (!copyObj.includes(item)) {
+        newAry.push(oldObj[item]);
+      }
+    });
+    console.log(newAry);
+
     return {
       modelValueaa,
       fooValue,
