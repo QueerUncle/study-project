@@ -509,7 +509,7 @@ export default {
       const newAry = [];
       for (let i = 0; i < source.length; i += 1) {
         const { sourceType } = source[i];
-        if (!obj[sourceType.id]) {
+        if (sourceType.id && !obj[sourceType.id]) {
           obj[sourceType.id] = source[i];
           newAry.push(source[i]);
         }
@@ -682,7 +682,6 @@ export default {
       const obj = {
         source: {
           sourceType: {
-            id: '',
             name: '',
             tags: [],
           },
@@ -830,7 +829,7 @@ export default {
           for (let o = 0; o < arr.length; o += 1) {
             if (
               typeof ruleForm.value[list[i]][j][arr[o]] === 'string' &&
-              ruleForm.value[list[i]][j][arr[o]] === ''
+              ruleForm.value[list[i]][j][arr[o]] === '' && arr[o] !== 'id'
             ) {
               flag = false;
               break;
@@ -844,7 +843,7 @@ export default {
       for (let j = 0; j < tempArr.length; j += 1) {
         if (
           typeof ruleForm.value.business[tempArr[j]] === 'string' &&
-          ruleForm.value.business[tempArr[j]] === ''
+          ruleForm.value.business[tempArr[j]] === '' && tempArr[j] !== 'id'
         ) {
           flag = false;
           break;
@@ -861,7 +860,7 @@ export default {
           for (let o = 0; o < arr.length; o += 1) {
             if (
               typeof ruleForm.value.roleList[j][arr[o]] === 'string' &&
-              ruleForm.value.roleList[j][arr[o]] === ''
+              ruleForm.value.roleList[j][arr[o]] === '' && arr[o] !== 'id'
             ) {
               flag = false;
               break;
@@ -878,7 +877,7 @@ export default {
           for (let o = 0; o < arr.length; o += 1) {
             if (
               typeof ruleForm.value.conditionList[j][arr[o]] === 'string' &&
-              ruleForm.value.conditionList[j][arr[o]] === ''
+              ruleForm.value.conditionList[j][arr[o]] === '' && arr[o] !== 'id'
             ) {
               flag = false;
               break;
@@ -895,7 +894,7 @@ export default {
           for (let o = 0; o < arr.length; o += 1) {
             if (
               typeof ruleForm.value.conditionList[j][arr[o]] === 'string' &&
-              ruleForm.value.conditionList[j][arr[o]] === ''
+              ruleForm.value.conditionList[j][arr[o]] === '' && arr[o] !== 'id'
             ) {
               flag = false;
               break;
@@ -907,7 +906,7 @@ export default {
           for (let o = 0; o < arr.length; o += 1) {
             if (
               typeof ruleForm.value.roleList[j][arr[o]] === 'string' &&
-              ruleForm.value.roleList[j][arr[o]] === ''
+              ruleForm.value.roleList[j][arr[o]] === '' && arr[o] !== 'id'
             ) {
               flag = false;
               break;
