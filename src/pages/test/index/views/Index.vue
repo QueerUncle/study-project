@@ -41,12 +41,16 @@
       <CustomButton @click = "handleButtonClick" />
     </div>
   </div>
+  <button @click = "linkTo">跳转</button>
+  <router-view></router-view>
 </template>
 
 <script lang='ts'>
 import {
   onMounted, reactive, ref, getCurrentInstance,
 } from 'vue';
+
+import { useRouter } from 'vue-router';
 
 import CustomButton from '../components/CustomButton.vue';
 
@@ -71,6 +75,12 @@ export default {
         top: 12,
       },
     ]);
+    const Router = useRouter();
+    const linkTo = () => {
+      Router.push({
+        path: '/treeTem',
+      });
+    };
     const scaleq = ref(10);
     console.log(scaleq);
     const handleButtonClick = (event) => {
@@ -86,6 +96,7 @@ export default {
       scaleq,
       list,
       handleButtonClick,
+      linkTo,
     };
   },
 };

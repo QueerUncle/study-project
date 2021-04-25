@@ -13,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/TreeTemplate.vue'),
   },
   {
+    path: '/Study',
+    name: 'Study',
+    component: () => import('../views/Study.vue'),
+  },
+  {
     path: '/VUE3Test',
     name: 'VUE3Test',
     component: () => import('../views/VUE3Test.vue'),

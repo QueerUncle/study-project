@@ -1,0 +1,55 @@
+<!--
+  @Author: lize
+  @Date: 2021/4/2
+  @Description :
+  @Parames :
+  @Example :
+  @Last Modified by: lize
+  @Last Modified time: 2021/4/2
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./EventCenter.js"></script>
+</head>
+<body>
+    <button class="btn">发布事件</button>
+    <button class="btnOff">解绑事件</button>
+    <button class="btnOffTarget">解绑全部某个指定事件</button>
+    <button class="btnOffAll">解绑全部事件</button>
+    <button class="btnOnce">发布一个只执行一次的事件</button>
+<script>
+  const evt = window.EventCenter;
+  // const eventCneter = new EventCenter(); // 也可以这样用
+  const fn1 = (status, data) => {
+    console.log(status, data);
+    return 1
+  }
+  evt.$once('handleOnceClick', (text) => {
+    console.log(text);
+  });
+  evt.$on('handleClick', fn1)
+  evt.$on('handleClick', (status, data) => {
+    console.log(status, data);
+    return 2;
+  })
+  document.querySelector('.btn').onclick = () => {
+    evt.$emit('handleClick', true, { index: 1, t: new Date().getTime()});
+  }
+  document.querySelector('.btnOff').onclick = () => {
+    evt.$off('handleClick', fn1);
+  }
+  document.querySelector('.btnOffTarget').onclick = () => {
+    evt.$off('handleClick');
+  }
+  document.querySelector('.btnOffAll').onclick = () => {
+    evt.$off();
+  }
+  document.querySelector('.btnOnce').onclick = () => {
+    evt.$emit('handleOnceClick', 'asdasdadads')
+  }
+</script>
+</body>
+</html>

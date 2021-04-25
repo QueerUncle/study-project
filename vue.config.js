@@ -26,6 +26,8 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
 const VUE_APP_CUSTOM_ENV = process.env.VUE_APP_CUSTOM_ENV; // eslint-disable-line
 
+LIZE = '我是李泽';
+
 module.exports = {
   // 模块化打包工具 - 2
   publicPath: cbimConf.publicPath,
@@ -41,7 +43,7 @@ module.exports = {
   productionSourceMap: !(process.env.VUE_APP_CUSTOM_ENV === 'production'),
   // 用于测试的代理服务
   devServer: {
-    index: 'index-index.html',
+    index: 'test-index.html',
     https: false,
     // proxy: 'http://10.80.2.11:8000/', // 运营管理平台
     proxy: 'http://10.80.12.41:8000/', // 裴姐
@@ -51,6 +53,7 @@ module.exports = {
     // proxy: 'http://10.80.12.210:8300/', // 晨明
     // proxy: 'http://10.80.2.64:8300/', // 王悦
     // proxy: 'http://10.80.2.24:8000/', // lvming
+    openPage: '/different/page',
   },
 
   // 移动端适配 适合css预处理语言

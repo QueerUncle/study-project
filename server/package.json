@@ -1,0 +1,26 @@
+{
+  "name": "liz-cli",
+  "version": "0.0.2",
+  "bin": {
+    "liz-cli": "index.ts"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^7.2.0",
+    "download-git-repo": "^3.0.2",
+    "inquirer": "^8.0.0",
+    "ora": "^5.4.0"
+  },
+  "description": "李泽的cli工具",
+  "main": "index.ts",
+  "devDependencies": {},
+  "scripts": {
+    "test": "liz-cli create myproject"
+  },
+  "keywords": [
+    "cli",
+    "vue"
+  ],
+  "author": "lize",
+  "license": "ISC"
+}
