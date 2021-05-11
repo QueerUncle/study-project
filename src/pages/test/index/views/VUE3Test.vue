@@ -11,7 +11,7 @@
   <div class="vue3-test-wrap">
     VUE3Test<br/>
     {{modelValue}}----{{fooValue}}
-    <CustomInput v-model = "modelValue" v-model:foo = "fooValue"/>
+    <CustomInput v-model = "modelValue" v-model:foo = "fooValue" :arr = "aloneCheckboxC"/>
 <!--    <input name = "aaa" label = "ccccc" type="checkbox"-->
 <!--    v-model = "checked" @change = "handleChange" />-->
     <el-checkbox-group v-model="checkList">
@@ -37,7 +37,7 @@
 </template>
 
 <script lang='ts'>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import CustomInput from '../components/CustomInput.vue';
 import CustomCheckboxGroup from '../components/CheckboxCom/CustomCheckboxGroup.vue';
 import CustomCheckbox from '../components/CheckboxCom/CustomCheckbox.vue';

@@ -22,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'VUE3Test',
     component: () => import('../views/VUE3Test.vue'),
   },
+  {
+    path: '/ObjectDefineProperty',
+    name: 'ObjectDefineProperty',
+    component: () => import('../views/ObjectDefineProperty.vue'),
+  },
 ];
 
 const router = createRouter({

@@ -16,22 +16,28 @@
 
 <script lang='ts'>
 
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useInput } from './useInput';
 
 export default {
   name: 'CustomInput',
   props: {
     foo: String,
     modelValue: String,
+    arr: Array,
   },
   emits: ['update:modelValue', 'update:foo'],
   setup(props, ctx) {
     const modelValueaa = ref('');
     const fooValue = ref('');
+    const { qwer } = useInput(props);
     watch(
       () => props.foo,
       (newValue: any) => {
         fooValue.value = newValue;
+        console.log(qwer, 'adasdasdasdas123123123132lizewatch');
+        // console.log(Array.from(aloneCheckboxC.value, (item) => item.value), 'asdasdasdasdas');
+        console.log(Array.from(qwer.value, (item: any) => item.value), 'asdasdadswatch');
       },
       { immediate: true, deep: true },
     );
@@ -45,6 +51,17 @@ export default {
         deep: true,
       },
     );
+    // const qwer = computed({
+    //   get() {
+    //     return props.arr;
+    //   },
+    //   set() {
+    //     console.log('1111111');
+    //   },
+    // });
+    // console.log(qwer, 'adasdasdasdas123123123132lize');
+    // // console.log(Array.from(aloneCheckboxC.value, (item) => item.value), 'asdasdasdasdasda');
+    // console.log(Array.from(qwer.value, (item: any) => item.value), 'asdasdasdasdasdasdads');
     const valueChange = (event) => {
       ctx.emit('update:modelValue', event.target.value);
     };
