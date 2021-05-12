@@ -9,6 +9,15 @@
  */
 import { computed } from 'vue';
 export const asd = () => 'asdasd';
+interface Iattr {
+  template: string;
+  forntId: string;
+}
+interface Iinput {
+  id: string;
+  name: string;
+  attr: Iattr;
+}
 export const useInput = (props) => { // eslint-disable-line
   const qwer = computed({
     get() {
@@ -19,7 +28,7 @@ export const useInput = (props) => { // eslint-disable-line
     },
   });
   const modelInfo = computed({
-    get() {
+    get(): Iinput {
       return props.modelInfo;
     },
     set() {
