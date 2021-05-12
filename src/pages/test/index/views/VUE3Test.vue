@@ -11,7 +11,9 @@
   <div class="vue3-test-wrap">
     VUE3Test<br/>
     {{modelValue}}----{{fooValue}}
-    <CustomInput v-model = "modelValue" v-model:foo = "fooValue" :arr = "aloneCheckboxC"/>
+    <CustomInput
+      :modelInfo = "modelInfo"
+      v-model = "modelValue" v-model:foo = "fooValue" :arr = "aloneCheckboxC"/>
 <!--    <input name = "aaa" label = "ccccc" type="checkbox"-->
 <!--    v-model = "checked" @change = "handleChange" />-->
     <el-checkbox-group v-model="checkList">
@@ -37,7 +39,7 @@
 </template>
 
 <script lang='ts'>
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import CustomInput from '../components/CustomInput.vue';
 import CustomCheckboxGroup from '../components/CheckboxCom/CustomCheckboxGroup.vue';
 import CustomCheckbox from '../components/CheckboxCom/CustomCheckbox.vue';
@@ -49,6 +51,14 @@ export default {
     const checkList = ref(['选中且禁用', '复选框 A']);
     const modelValue = ref('李泽');
     const fooValue = ref('aaaaa');
+    const modelInfo = reactive({
+      id: '1',
+      name: 'lize',
+      attr: {
+        template: 'asdasdad',
+        forntId: 'asdasdasd9879798',
+      },
+    });
     // const checked = ref([]);
     const checked = ref(false);
     const aloneCheckboxC = ref([
@@ -82,6 +92,18 @@ export default {
     const changeCheckboxGroup = (data) => {
       console.log(data);
     };
+    const age = ref(10);
+    const ageCom = computed({
+      get() {
+        return age;
+      },
+      set(value) {
+        console.log(value, '我发生了更扁');
+        age.value += (value as number);
+      },
+    });
+    ageCom.value = 10;
+    console.log(age);
     return {
       checkList,
       modelValue,
@@ -91,6 +113,7 @@ export default {
       aloneCheckboxC,
       resData,
       changeCheckboxGroup,
+      modelInfo,
     };
   },
 };

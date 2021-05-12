@@ -18,9 +18,18 @@ export const useInput = (props) => { // eslint-disable-line
       console.log('1111111');
     },
   });
+  const modelInfo = computed({
+    get() {
+      return props.modelInfo;
+    },
+    set() {
+      console.log('fashengle set');
+    },
+  });
   const po = 'lize';
   return {
     qwer,
     po,
+    modelInfo,
   };
 };

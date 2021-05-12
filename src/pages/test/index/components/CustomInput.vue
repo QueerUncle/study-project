@@ -25,19 +25,22 @@ export default {
     foo: String,
     modelValue: String,
     arr: Array,
+    modelInfo: Object,
   },
   emits: ['update:modelValue', 'update:foo'],
   setup(props, ctx) {
     const modelValueaa = ref('');
     const fooValue = ref('');
-    const { qwer } = useInput(props);
+    const { qwer, modelInfo } = useInput(props);
+    const { template } = modelInfo.value.attr;
+    console.log(template, 'template');
     watch(
       () => props.foo,
       (newValue: any) => {
         fooValue.value = newValue;
         console.log(qwer, 'adasdasdasdas123123123132lizewatch');
-        // console.log(Array.from(aloneCheckboxC.value, (item) => item.value), 'asdasdasdasdas');
         console.log(Array.from(qwer.value, (item: any) => item.value), 'asdasdadswatch');
+        console.log(modelInfo.value.attr, 'modelInfomodelInfo');
       },
       { immediate: true, deep: true },
     );
