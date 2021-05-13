@@ -17,6 +17,8 @@
 <script lang='ts'>
 
 import { computed, ref, watch } from 'vue';
+import { useGlobalConfig } from '@/assets/utils';
+import { Http } from '@/assets/http';
 import { useInput } from './useInput';
 
 export default {
@@ -29,6 +31,8 @@ export default {
   },
   emits: ['update:modelValue', 'update:foo'],
   setup(props, ctx) {
+    const Global = useGlobalConfig();
+    console.log(Global, '$Http$Http$Http$Http$Http$Http');
     const modelValueaa = ref('');
     const fooValue = ref('');
     const { qwer, modelInfo } = useInput(props);

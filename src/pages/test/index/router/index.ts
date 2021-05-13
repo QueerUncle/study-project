@@ -27,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'ObjectDefineProperty',
     component: () => import('../views/ObjectDefineProperty.vue'),
   },
+  {
+    path: '/CustomForm',
+    name: 'CustomForm',
+    component: () => import('../views/CustomForm.vue'),
+  },
 ];
 
 const router = createRouter({
