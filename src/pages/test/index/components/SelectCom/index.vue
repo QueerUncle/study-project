@@ -51,10 +51,9 @@ export default {
     watch(
       () => props.modelValue,
       (newValue) => {
+        if (!Object.keys(newValue).length || newValue.value === selectValue.value) return;
         console.log(newValue, '我是子组件打印的');
-        if (Object.keys(newValue).length) {
-          selectValue.value = newValue.value;
-        }
+        selectValue.value = newValue.value;
       },
       { immediate: true, deep: true },
     );
