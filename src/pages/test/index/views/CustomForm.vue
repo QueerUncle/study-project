@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, watch } from 'vue';
+import { reactive, watch, provide } from 'vue';
 import SelectCom from '../components/SelectCom/index.vue';
 
 export default {
@@ -37,6 +37,7 @@ export default {
     const dataObj = reactive({
       selectOne: {},
     });
+    provide('dataObj', dataObj);
     setTimeout(() => {
       dataObj.selectOne = {
         value: '选项1',

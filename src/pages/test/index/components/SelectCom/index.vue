@@ -21,7 +21,9 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, watch } from 'vue';
+import {
+  reactive, ref, watch, inject,
+} from 'vue';
 
 export default {
   name: 'index',
@@ -30,6 +32,8 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, ctx) { // eslint-disable-line
+    const dataObj = inject('dataObj');
+    console.log(dataObj, 'dataObjdataObjdataObjdataObjdataObjdataObj');
     const options = reactive([
       {
         value: '选项1',
