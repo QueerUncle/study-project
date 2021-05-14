@@ -10,6 +10,7 @@
 <template>
   <div class="right-tem-wrap">
     <div class = "box-wrap" @drop="drop" />
+    <div class = "box-wrap" style="margin-top: 20px" @drop="drop1" />
   </div>
 </template>
 
@@ -27,10 +28,15 @@ export default {
   setup(props) {
     // 拖拽结束的时候
     const drop = (event) => {
-      console.log(event, props.getTargetData());
+      console.log('drop', event, props.getTargetData());
+    };
+    // 拖拽结束的时候
+    const drop1 = (event) => {
+      console.log('drop11111', event, props.getTargetData());
     };
     return {
       drop,
+      drop1,
     };
   },
 };
