@@ -1,0 +1,39 @@
+<!--
+  @Author: lize
+  @Date: 2021/5/21
+  @Description :
+  @Param :
+  @Example :
+  @Last Modified by: lize
+  @Last Modified time: 2021/5/21
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  function myNew() {
+    // 生命一个控对象
+    const obj = {};
+    // 把类数组转为真正的数组,并拿到数组的第一项，得到一个需要实例化的构造函数。
+    const Constructor = [].shift.call(arguments); // eslint-disable-line
+    // 设置 对象obj的__proto__属性指向构造函数的原型。
+    obj.__proto__ = Constructor.prototype; // eslint-disable-line
+    // 将构造函数的this指向obj这个对象
+    let ret = Constructor.apply(obj, arguments); // eslint-disable-line
+    // 判断构造函数是否又返回值，有的话返回该函数的返回值，没有的话，返回定义的obj对象。
+    return typeof ret === 'object' ? ret : obj; // eslint-disable-line
+  }
+
+  function aasd(){};
+  aasd.prototype.b = 1;
+
+  const c = myNew(aasd);
+  console.log(c);
+
+</script>
+</body>
+</html>

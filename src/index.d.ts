@@ -12,5 +12,11 @@ import { AxiosInstance } from 'axios';
 declare module 'Vue/types/vue' {
   interface Vue {
     $Http: AxiosInstance;
+    logString: Function;
+    window: any;
+    Window: aany;
+  }
+  interface Window {
+    logString: Function;
   }
 }
