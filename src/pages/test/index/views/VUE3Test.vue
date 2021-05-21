@@ -104,6 +104,7 @@ export default {
     });
     ageCom.value = 10;
     console.log(age);
+    console.log(modelInfo, 'modelInfomodelInfomodelInfo');
     return {
       checkList,
       modelValue,
