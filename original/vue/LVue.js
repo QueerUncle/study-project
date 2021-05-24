@@ -7,6 +7,11 @@
   @Last Modified by: lize
   @Last Modified time: 2021/5/20
  */
+<<<<<<< HEAD
+=======
+// eslint-disable-next-line max-classes-per-file
+const getData = (data, vm) => data.call(vm, vm);
+>>>>>>> 92dfba850b5260ccd4c90d7bbb71a344a7cdb4f7
 function initWatch(vm, watch) {
   for (let key in watch) { // eslint-disable-line
     new Watcher(vm, key, watch[key]); // eslint-disable-line
