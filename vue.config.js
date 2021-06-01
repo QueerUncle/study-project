@@ -20,7 +20,7 @@ const Analyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // Gzip压缩
 const CompressionWebpackPluginKey = true;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const CompressionWebpackPlugin = require('compression-webpack-plugin');
+// const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
 // const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
@@ -139,19 +139,19 @@ module.exports = {
     if (AnalyzerKey) {
       config.plugins.push(new Analyzer());
     }
-    // Gzip压缩
-    if (CompressionWebpackPluginKey) {
-      config.plugins.push(
-        new CompressionWebpackPlugin({
-          filename: '[path].gz[query]',
-          algorithm: 'gzip',
-          test: new RegExp('\\.(js|css)$'),
-          threshold: 10240,
-          minRatio: 0.8,
-          deleteOriginalAssets: false,
-        }),
-      );
-    }
+    // // Gzip压缩
+    // if (CompressionWebpackPluginKey) {
+    //   config.plugins.push(
+    //     new CompressionWebpackPlugin({
+    //       filename: '[path].gz[query]',
+    //       algorithm: 'gzip',
+    //       test: new RegExp('\\.(js|css)$'),
+    //       threshold: 10240,
+    //       minRatio: 0.8,
+    //       deleteOriginalAssets: false,
+    //     }),
+    //   );
+    // }
     // config.plugins.push(
     //   new MonacoWebpackPlugin({
     //     languages: ['javascript', 'css', 'html', 'typescript', 'json']

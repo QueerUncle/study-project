@@ -47,7 +47,8 @@ import CustomCheckbox from '../components/CheckboxCom/CustomCheckbox.vue';
 export default {
   name: 'VUE3Test',
   components: { CustomInput, CustomCheckboxGroup, CustomCheckbox },
-  setup() {
+  setup(props, ctx) {
+    console.log(props, ctx);
     const checkList = ref(['选中且禁用', '复选框 A']);
     const modelValue = ref('李泽');
     const fooValue = ref('aaaaa');

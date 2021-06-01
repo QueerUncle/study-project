@@ -9,24 +9,26 @@
  -->
 <template>
   <div class="tree-com-wrap">
-    <div
-      v-for = "item in treeData"
-      :key = "item[rowKey]"
-      class = "item-wrap">
       <div
-        draggable="true"
-        class = "item-info-wrap"
-        @dragstart="dragstart($event, item)"
-        @click.stop = "handleCLick(item)">
-        {{item[valueName]}}
+        v-for = "item in treeData"
+        :key = "item[rowKey]"
+        class = "item-wrap">
+        <div
+          draggable="true"
+          class = "item-info-wrap"
+          @dragstart="dragstart($event, item)"
+          @dragenter="handleDragenter"
+          @drag="handledrag($event)"
+          @click.stop = "handleCLick(item)">
+          {{item[valueName]}}
+        </div>
+        <div class = "children-wrap" v-if="item[childrenKey] && item[childrenKey].length">
+          <TreeCom
+            @item-drag = "handleItemDrag"
+            @item-click = "handleItemClick"
+            :tree-data="item[childrenKey]"/>
+        </div>
       </div>
-      <div class = "children-wrap" v-if="item[childrenKey] && item[childrenKey].length">
-        <TreeCom
-          @item-drag = "handleItemDrag"
-          @item-click = "handleItemClick"
-          :tree-data="item[childrenKey]"/>
-    </div>
-    </div>
   </div>
 </template>
 
@@ -55,6 +57,17 @@ export default {
   },
   emits: ['item-click', 'item-drag'],
   setup(props, ctx) {
+    const list1 = reactive([
+      { name: 'John', id: 1 },
+      { name: 'oao', id: 2 },
+      { name: 'Jean', id: 3 },
+      { name: 'Gerard', id: 4 },
+    ]);
+    const list2 = reactive([
+      { name: 'Juan', id: 5 },
+      { name: 'Edgard', id: 6 },
+      { name: 'Johnson', id: 7 },
+    ]);
     // 拖拽的元素
     let targetData: any = reactive(null);
     // 节点发生点击
@@ -74,14 +87,28 @@ export default {
     const handleItemDrag = (event, item) => {
       dragstart(event, item);
     };
+    const handledrag = (event) => {
+      // console.log(event, 'handledraghandledraghandledraghandledraghandledrag');
+    };
+    const handleDragenter = (event) => {
+      console.log(event, 'handleDragenterhandleDragenterhandleDragenterhandleDragenter');
+    };
     // 获取该组件内保存的拖着的节点数据，返回正在拖拽的元素
     const getTargetData = () => targetData;
+    const log = (evt) => {
+      console.log(evt);
+    };
     return {
+      log,
       handleCLick,
       dragstart,
       handleItemClick,
       handleItemDrag,
       getTargetData,
+      list1,
+      list2,
+      handledrag,
+      handleDragenter,
     };
   },
 };

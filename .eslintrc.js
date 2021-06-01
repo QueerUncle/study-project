@@ -20,5 +20,6 @@ module.exports = {
     "lines-between-class-members": 'off',
     "@typescript-eslint/no-var-requires": 'off',
     "import/newline-after-import": 'off',
+    "@typescript-eslint/explicit-module-boundary-types": 'off',
   },
 };

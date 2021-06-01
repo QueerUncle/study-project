@@ -32,6 +32,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'CustomForm',
     component: () => import('../views/CustomForm.vue'),
   },
+  {
+    path: '/vuedrannable',
+    name: 'vuedrannable',
+    component: () => import('../views/vuedrannable.vue'),
+  },
+  {
+    path: '/formTable',
+    name: 'FormTable',
+    component: () => import('../views/FormTable/FormTable.vue'),
+  },
 ];
 
 const router = createRouter({
