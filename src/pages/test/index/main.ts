@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import http from '@/assets/http';
 import ElementPlus from 'element-plus';
 import JsonViewer from 'vue3-json-viewer';
-import Draggable from '@/components/draggable';
+import Draggable from '../../../../original/draggable';
 import App from './App.vue';
 import router from './router';
 import store from './store';
