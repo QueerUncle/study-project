@@ -38,6 +38,7 @@ export const componentProps = {
   list: {
     type: Array,
     default: () => ([]),
+    require: true,
   },
   clone: {
     type: Function,

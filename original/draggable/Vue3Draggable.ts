@@ -51,6 +51,7 @@ const draggableComponent = {
       },
       onDragAdd(evt) {
         const data = evt.item._underlying_vm_; // eslint-disable-line
+        console.warn('Data list not parsed, please pass in data correctly！');
         if (!data) return;
         // eslint-disable-next-line no-use-before-define
         removeNode(evt.item);
