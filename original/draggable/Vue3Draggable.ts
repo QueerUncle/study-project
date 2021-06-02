@@ -12,6 +12,7 @@ import {
 } from 'vue';
 import Sortable from 'sortablejs';
 import {
+  defaultGroup,
   componentProps,
   eventEmitsOptions,
   eventsListenerOptions,
@@ -74,6 +75,7 @@ const draggableComponent = {
       await setTimeout(async () => {
         const targetNode = document.querySelector(`#${prefix}-${getTag()}-wrap`);
         const options = { ...props, ...eventEmitsOptions(ctx), ...eventsListenerOptions(eventObj) };
+        options.group = { ...defaultGroup, ...options.group };
         SortableTarget.value = await new Sortable(targetNode, options);
       }, 500);
     });

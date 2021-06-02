@@ -9,6 +9,7 @@
 */
 export const eventsListened = ['Start', 'Add', 'Update'];
 export const eventsEmits = ['End', 'Remove', 'Sort', 'Filter', 'Move', 'Clone', 'Change', 'Unchoose', 'Choose'];
+export const defaultGroup = { name: 'form', pull: 'clone', put: false };
 export const componentProps = {
   tag: {
     type: String,
@@ -17,11 +18,7 @@ export const componentProps = {
   },
   group: {
     type: Object,
-    default: () => ({
-      name: 'form',
-      pull: 'clone',
-      put: false,
-    }),
+    default: () => (defaultGroup),
   },
   ghostClass: {
     type: String,
