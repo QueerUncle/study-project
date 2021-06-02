@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import TestIndex from '../views/Index.vue';
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
