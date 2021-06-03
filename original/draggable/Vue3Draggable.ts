@@ -37,13 +37,7 @@ const draggableComponent = {
     const ResultList = reactive(props.list);
     const SortableTarget = ref();
     const prefix = randCode();
-    const getTag = () => {
-      if (!props.tag) {
-        console.log(ctx.slots.default());
-      }
-      return props.tag || 'div';
-    };
-
+    const getTag = () => props.tag || 'div';
     const eventObj = reactive({
       onDragStart(evt) {
         const { data } = getOldNodeIndexAndData(evt, ResultList);
@@ -52,8 +46,10 @@ const draggableComponent = {
       },
       onDragAdd(evt) {
         const data = evt.item._underlying_vm_; // eslint-disable-line
-        console.warn('Data list not parsed, please pass in data correctly！');
-        if (!data) return;
+        if (!data) {
+          console.warn('Data list not parsed, please pass in data correctly！');
+          return;
+        }
         // eslint-disable-next-line no-use-before-define
         removeNode(evt.item);
         if (!evt.originalEvent.cancelable) return;

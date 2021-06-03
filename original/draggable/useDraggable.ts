@@ -14,7 +14,7 @@ export const componentProps = {
   tag: {
     type: String,
     default: 'div',
-    require: true,
+    required: true,
   },
   group: {
     type: Object,
