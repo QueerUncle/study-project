@@ -14,6 +14,7 @@
         <Draggable
           :list = "TemplateList"
           :group="{name: 'form', pull: 'clone', put: true }"
+          :key = "TemplateList.length"
           ghostClass="ghost"
           :sort = "true"
           tag = "el-row"
@@ -25,7 +26,7 @@
             style="flex: none"
             type = 'flex'
             v-for="(item, index) in templateList"
-            :key = "JSON.stringify(item)"
+            :key = "index"
             :span = "item.attributes.layout"
             :xs="24">
             <div>

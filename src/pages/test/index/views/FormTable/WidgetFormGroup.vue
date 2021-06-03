@@ -18,6 +18,7 @@
       style="display: flex;flex-direction: column"
       :list = "Column.elements"
       tag = "el-row"
+      :key = "Column.elements.length"
       class="widget-form-group__body"
       :group="{name: 'form', pull: 'clone', put: true}"
       :sort = "true"
@@ -28,7 +29,7 @@
         type = "flex"
         style = "flex:none"
         v-for="(item, index) in Column.elements"
-        :key = "JSON.stringify(item)"
+        :key = "index"
         :span = "item.attributes.layout"
         :xs="24">
         <div
