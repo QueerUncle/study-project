@@ -9,11 +9,9 @@
 */
 import { reactive, ref } from 'vue';
 import { ItemMouldValue, ItemMouldData } from './fieldsConfig';
-const selectWidget = reactive({
-  data: { id: '' },
-});
-const TemplateList = reactive([]);
-const FormValues = reactive({});
+const selectWidget = ref({});
+const TemplateList = ref([]);
+const FormValues = ref({});
 
 export const createDragData = (data) => {
   const copyItemMouldData = JSON.parse(JSON.stringify(ItemMouldData));
@@ -31,7 +29,7 @@ export const createDragData = (data) => {
 };
 export const handleSelectWidget = (SelectWidget, index, templateList) => {
   console.log(SelectWidget, templateList[index]);
-  selectWidget.data = templateList[index]; // eslint-disable-line
+  selectWidget.value = templateList[index]; // eslint-disable-line
 };
 export const handleDragAdd = (evt, templateList, formValues, SelectWidget) => {
   const { itemData, itemValue } = createDragData(evt.data);
@@ -60,9 +58,14 @@ export const handleFieldClick = (item, templateList, SelectWidget) => {
   const { itemData, itemValue } = createDragData(item);
   templateList.push(itemData);
   if (itemValue) {
-    FormValues[itemData.id] = itemValue; // eslint-disable-line
+    FormValues.value[itemData.id] = itemValue; // eslint-disable-line
   }
   handleSelectWidget(SelectWidget, templateList.length - 1, templateList);
+};
+export const handleEmpty = () => {
+  selectWidget.value = {};
+  TemplateList.value = [];
+  FormValues.value = {};
 };
 export const useFormTable = () => ({
   selectWidget,

@@ -46,6 +46,11 @@
             type="text">
             重做
           </el-button>
+          <el-button
+            size = "mini"
+            type="text" @click = "handleEmpty">
+            清空
+          </el-button>
         </div>
         <div>
           <el-button
@@ -60,13 +65,13 @@
         <WidgetForm
           ref = "WidgetForm"
           :templateList = "TemplateList"
-          :selectWidget = "selectWidget.data"
+          :selectWidget = "selectWidget"
           :formValues = "FormValues"/>
       </div>
     </div>
 <!--    右侧-->
     <div class = "widget-config-container">
-      <WidgetConfig :selectWidget = "selectWidget.data" />
+      <WidgetConfig :selectWidget = "selectWidget" />
     </div>
   </div>
 <!--  Json查看器-->
@@ -74,7 +79,7 @@
 </template>
 <script lang='ts'>
 import { reactive, ref } from 'vue';
-import { useFormTable, handleFieldClick } from './useFormTable';
+import { useFormTable, handleFieldClick, handleEmpty } from './useFormTable';
 import { fieldsList } from './fieldsConfig';
 import WidgetForm from './WidgetForm.vue';
 import ViewJson from './ViewJson.vue';
@@ -85,7 +90,8 @@ export default {
   components: { WidgetForm, ViewJson, WidgetConfig },
   setup() {
     const fieldsListUlWrap = ref(null);
-    const { TemplateList, FormValues, selectWidget } = useFormTable();
+    const { TemplateList, selectWidget, FormValues } = useFormTable();
+    console.log(TemplateList, selectWidget, FormValues, 'FormValuesFormValues');
     const viewJsonOptions = reactive({
       visible: false,
       data: {},
@@ -93,9 +99,10 @@ export default {
     // 查看json
     const handleViewJson = () => {
       viewJsonOptions.visible = true;
+      console.log(FormValues, 'FormValuesFormValuesFormValues');
       viewJsonOptions.data = JSON.parse(JSON.stringify({
-        TemplateList,
-        FormValues,
+        TemplateList: TemplateList.value,
+        FormValues: FormValues.value,
       }));
     };
     return {
@@ -107,6 +114,7 @@ export default {
       selectWidget,
       handleFieldClick,
       handleViewJson,
+      handleEmpty,
     };
   },
 };
