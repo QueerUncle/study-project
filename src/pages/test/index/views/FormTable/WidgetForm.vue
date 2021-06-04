@@ -71,7 +71,7 @@
   </div>
 </template>
 <script lang='ts'>
-import { reactive } from 'vue';
+import { computed } from 'vue';
 import WidgetFormGroup from './WidgetFormGroup.vue';
 import {
   handleDragAdd, handleDragRemove, handleDelete, handleSelectWidget,
@@ -86,9 +86,9 @@ export default {
     selectWidget: Object,
   },
   setup(props) {
-    const TemplateList = reactive(props.templateList);
-    const FormValues = reactive(props.formValues);
-    const SelectWidget = reactive(props.selectWidget);
+    const TemplateList = computed(() => props.templateList);
+    const FormValues = computed(() => props.formValues);
+    const SelectWidget = computed(() => props.selectWidget);
     return {
       TemplateList,
       FormValues,

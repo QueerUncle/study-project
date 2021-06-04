@@ -7,10 +7,11 @@
   @Last Modified by: lize
   @Last Modified time: 2021/5/29
 */
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { ItemMouldValue, ItemMouldData } from './fieldsConfig';
-
-const selectWidget = reactive({});
+const selectWidget = reactive({
+  data: { id: '' },
+});
 const TemplateList = reactive([]);
 const FormValues = reactive({});
 
@@ -29,11 +30,12 @@ export const createDragData = (data) => {
   };
 };
 export const handleSelectWidget = (SelectWidget, index, templateList) => {
-  Object.assign(SelectWidget, templateList[index]);
+  console.log(SelectWidget, templateList[index]);
+  selectWidget.data = templateList[index]; // eslint-disable-line
 };
 export const handleDragAdd = (evt, templateList, formValues, SelectWidget) => {
   const { itemData, itemValue } = createDragData(evt.data);
-  templateList.splice(evt.newIndex, 0, itemData);
+  templateList.splice(evt.newIndex, 0, reactive(itemData));
   if (itemValue) {
     formValues[itemData.id] = itemValue; // eslint-disable-line
   }
@@ -54,13 +56,13 @@ export const handleDelete = (index, item, templateList, formValues, SelectWidget
     handleSelectWidget(SelectWidget, templateList.length - 1, templateList);
   }
 };
-export const handleFieldClick = (item, SelectWidget) => {
+export const handleFieldClick = (item, templateList, SelectWidget) => {
   const { itemData, itemValue } = createDragData(item);
-  TemplateList.push(itemData);
+  templateList.push(itemData);
   if (itemValue) {
     FormValues[itemData.id] = itemValue; // eslint-disable-line
   }
-  handleSelectWidget(SelectWidget, TemplateList.length - 1, TemplateList);
+  handleSelectWidget(SelectWidget, templateList.length - 1, templateList);
 };
 export const useFormTable = () => ({
   selectWidget,

@@ -52,7 +52,7 @@
   </div>
 </template>
 <script lang='ts'>
-import { reactive } from 'vue';
+import { computed } from 'vue';
 import {
   handleDragAdd, handleDragRemove, handleDelete, handleSelectWidget,
 } from './useFormTable';
@@ -65,9 +65,9 @@ export default {
     formValues: Object,
   },
   setup(props) {
-    const Column = reactive(props.column);
-    const FormValues = reactive(props.formValues);
-    const SelectWidget = reactive(props.selectWidget);
+    const Column = computed(() => props.column);
+    const FormValues = computed(() => props.formValues);
+    const SelectWidget = computed(() => props.selectWidget);
     return {
       Column,
       FormValues,

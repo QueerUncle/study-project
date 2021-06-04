@@ -24,7 +24,7 @@
                 v-for="(j, j_index) in item.list"
                 :key = "j_index">
                 <span
-                  @click.stop = "handleFieldClick(j, selectWidget)">
+                  @click.stop = "handleFieldClick(j, TemplateList, selectWidget)">
                   {{j.label}}
                 </span>
               </li>
@@ -60,12 +60,14 @@
         <WidgetForm
           ref = "WidgetForm"
           :templateList = "TemplateList"
-          :selectWidget = "selectWidget"
+          :selectWidget = "selectWidget.data"
           :formValues = "FormValues"/>
       </div>
     </div>
 <!--    右侧-->
-    <div class = "widget-config-container"></div>
+    <div class = "widget-config-container">
+      <WidgetConfig :selectWidget = "selectWidget.data" />
+    </div>
   </div>
 <!--  Json查看器-->
   <ViewJson :viewJsonOptions = "viewJsonOptions" v-if="viewJsonOptions.visible" />
@@ -76,13 +78,14 @@ import { useFormTable, handleFieldClick } from './useFormTable';
 import { fieldsList } from './fieldsConfig';
 import WidgetForm from './WidgetForm.vue';
 import ViewJson from './ViewJson.vue';
+import WidgetConfig from './WidgetConfig.vue';
 
 export default {
   name: 'FormTable',
-  components: { WidgetForm, ViewJson },
+  components: { WidgetForm, ViewJson, WidgetConfig },
   setup() {
     const fieldsListUlWrap = ref(null);
-    const { selectWidget, TemplateList, FormValues } = useFormTable();
+    const { TemplateList, FormValues, selectWidget } = useFormTable();
     const viewJsonOptions = reactive({
       visible: false,
       data: {},
