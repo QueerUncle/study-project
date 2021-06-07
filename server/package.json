@@ -8,10 +8,12 @@
     "chalk": "^4.1.0",
     "commander": "^7.2.0",
     "download-git-repo": "^3.0.2",
+    "express": "^4.17.1",
     "inquirer": "^8.0.0",
     "node-xlsx": "^0.16.1",
     "ora": "^5.4.0",
-    "pdf2json": "^1.2.1"
+    "pdf2json": "^1.2.1",
+    "xlsx": "^0.16.9"
   },
   "description": "李泽的cli工具",
   "main": "index.ts",
