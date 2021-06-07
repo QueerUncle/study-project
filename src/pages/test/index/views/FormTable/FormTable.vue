@@ -91,7 +91,6 @@ export default {
   setup() {
     const fieldsListUlWrap = ref(null);
     const { TemplateList, selectWidget, FormValues } = useFormTable();
-    console.log(TemplateList, selectWidget, FormValues, 'FormValuesFormValues');
     const viewJsonOptions = reactive({
       visible: false,
       data: {},
@@ -99,7 +98,6 @@ export default {
     // 查看json
     const handleViewJson = () => {
       viewJsonOptions.visible = true;
-      console.log(FormValues, 'FormValuesFormValuesFormValues');
       viewJsonOptions.data = JSON.parse(JSON.stringify({
         TemplateList: TemplateList.value,
         FormValues: FormValues.value,
