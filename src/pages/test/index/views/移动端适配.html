@@ -1,0 +1,83 @@
+<!--
+ * @Description:
+ * @Version: 2.0
+ * @Autor: liushuhao
+ * @Date: 2021-06-09 15:02:29
+ * @LastEditors: liushuhao
+ * @LastEditTime: 2021-06-17 09:50:34
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750,user-scalable=no,viewport-fit=cover">
+    <title>Document</title>
+    <style>
+        p {
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<h2>页面标题</h2>
+<p>
+    - 第一：活动类经历会短期内提升一个业务前端的技术水平
+    笔者之前从来没做过C端的活动页，这次做过之后有一些简单的技术感触，稍后会跟大家简单聊聊，短短十几天里，单独一个活动能给一个业务前端带来哪些成长。
+    <br />
+    - 第二：活动类（618、双十一）这种，对于一个前端来说更大的是身体上的考验
+    笔者就职于国内 TOP3 的短视频电商领域，年中活动从五一开始到五月底，只休息了一天，工作时间基本稳定在早十晚十二。
+</p >
+</body>
+
+</html>
+<script>
+  let a = function () {
+    this.age = 1;
+    this.name = '刘浩'
+    return 1
+  }
+  a.prototype.test1 = function () {
+    console.log(this.age, '+++', this.name);
+  }
+  // // // let result = new a();
+  // let obj = {};
+  // // obj.prototype = a.prototype;
+  // let res=  Object.setPrototypeOf(obj, a.prototype)
+  // a.call(res)
+  // console.log(res, '222');
+  // res.test1()
+  // console.dir(result, 'aa');
+
+  // function handlerNum(n) {
+  //     if (n / 9 > 16) return -1
+
+  //     let res = 0
+  //     for (let i = 0, imax = 16; i <= imax; i++) {
+  //         if (n > 9) {
+  //             res += Math.pow(10, i) * 9
+  //             n -= 9
+  //             continue
+  //         }
+  //         res += Math.pow(10, i) * n
+  //         break
+  //     }
+
+  //     return res
+  // }
+  // console.log(handlerNum(11));
+  // new 创建一个新对象,
+  // 设置原型,将新对象的原型绑定到构造函数上
+  // 并绑定参数
+  // 判断类型，返回结果
+
+  let myNew = function (fn, ...args) {
+    let obj = Object.create(fn.prototype)
+    let result = fn.apply(obj, args);
+    return result instanceof Object ? result : obj;
+  }
+  let z = myNew(a);
+  z.test1()
+  console.log(myNew(a));
+</script>

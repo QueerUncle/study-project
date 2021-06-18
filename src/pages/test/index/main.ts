@@ -3,6 +3,7 @@ import http from '@/assets/http';
 import ElementPlus from 'element-plus';
 import JsonViewer from 'vue3-json-viewer';
 import Draggable from '../../../../original/draggable';
+import CTables from '../../../components/vite-app.es';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -18,4 +19,5 @@ createApp(App)
   .use(ElementPlus)
   .use(JsonViewer)
   .use(Draggable)
+  .use(CTables)
   .mount('#app');

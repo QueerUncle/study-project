@@ -1,0 +1,66 @@
+<!--
+  @Author: lize
+  @Date: 2021/6/17
+  @Description : 
+  @Parames :
+  @Example :
+  @Last Modified by: lize
+  @Last Modified time: 2021/6/17
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对象方法及属性</title>
+</head>
+<body>
+    <pre>
+        <h2>Object</h2>
+        1、Object.is(x， y)  判断俩个值是否相等，类似于===。
+        2、object.assign(target, source)  将源对象（source）的所有可枚举属性，复制到目标对象（target）。
+            不拷贝继承属性和不可枚举的属性。
+            方法实行的是浅拷贝，而不是深拷贝。也就是说，如果源对象某个属性的值是对象，那么目标对象拷贝得到的是这个对象的引用。
+            只能进行值的复制，如果要复制的值是一个取值函数，那么将求值后再复制。
+        3、Object.getOwnPropertyDescriptors()  返回指定对象所有自身属性（非继承属性）的描述对象。
+        4、Object.setPrototypeOf（）方法的作用与__proto__相同，用来设置一个对象的原型对象（prototype），返回参数对象本身。
+            它是 ES6 正式推荐的设置原型对象的方法。
+        5、Object.getPrototypeOf(obj) 该方法与Object.setPrototypeOf方法配套，用于读取一个对象的原型对象。
+        6、Object.keys()  返回一个数组，成员是参数对象自身的（不含继承的）所有可遍历（enumerable）属性的键名。
+        7、Object.values() 方法返回一个数组，成员是参数对象自身的（不含继承的）所有可遍历（enumerable）属性的键值。
+        8、Object.entries() 方法返回一个数组，成员是参数对象自身的（不含继承的）所有可遍历（enumerable）属性的键值对数组。
+        9、Object.fromEntries() 方法是Object.entries()的逆操作，用于将一个键值对数组转为对象。
+        10、Object.getOwnPropertyDescriptor() 方法可以获取该属性的描述对象。
+                描述对象的enumerable属性，称为“可枚举性”，如果该属性为false，就表示某些操作会忽略当前属性。
+                目前，有四个操作会忽略enumerable为false的属性。
+
+                for...in循环：只遍历对象自身的和继承的可枚举的属性。
+                Object.keys()：返回对象自身的所有可枚举的属性的键名。
+                JSON.stringify()：只串行化对象自身的可枚举的属性。
+                Object.assign()： 忽略enumerable为false的属性，只拷贝对象自身的可枚举的属性。
+        11、Object.getOwnPropertyNames() 返回一个数组，包含对象自身的所有属性（不含 Symbol 属性，但是包括不可枚举属性）的键名。
+        12、Object.getOwnPropertySymbols（） 返回一个数组，包含对象自身的所有 Symbol 属性的键名。
+        13、Reflect.ownKeys(obj) Reflect.ownKeys返回一个数组，包含对象自身的（不含继承的）所有键名，
+            不管键名是 Symbol 或字符串，也不管是否可枚举。
+            以上的 5 种方法遍历对象的键名，都遵守同样的属性遍历的次序规则。for..in,Object.keys,Object.getOwnPropertyNames(obj),Object.getOwnPropertySymbols(obj),Reflect.ownKeys(obj)
+                首先遍历所有数值键，按照数值升序排列。
+                其次遍历所有字符串键，按照加入时间升序排列。
+                最后遍历所有 Symbol 键，按照加入时间升序排列。
+        14、super 指向当前对象的原型对象。
+        15、链式调用 ?.
+            const firstName = message?.body?.user?.firstName || 'default';
+            意思是message存在然后继续往后走。
+        16、null 和 undefined 判断运算符  它的行为类似||，但是只有运算符左侧的值为null或undefined时，才会返回右侧的值。
+            这个运算符的一个目的，就是跟链判断运算符?.配合使用，为null或undefined的值设置默认值。
+            const animationDuration = response.settings?.animationDuration ?? 300;
+            这个运算符很适合判断函数参数是否赋值。
+            function Component(props) {
+                const enable = props.enabled ?? true;
+                // …
+            }
+            ??有一个运算优先级问题，它与&&和||的优先级孰高孰低。现在的规则是，如果多个逻辑运算符一起使用，必须用括号表明优先级，否则会报错。
+            lhs && middle ?? rhs  // 这个会报错
+            (lhs && middle) ?? rhs;
+            lhs && (middle ?? rhs);
+    </pre>
+</body>
+</html>

@@ -41,6 +41,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'FormTable',
     component: () => import('../views/FormTable/FormTable.vue'),
   },
+  {
+    path: '/Es6',
+    name: 'Es6',
+    component: () => import('../views/Es6.vue'),
+  },
 ];
 
 const router = createRouter({
